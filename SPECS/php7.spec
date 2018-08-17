@@ -887,11 +887,13 @@ sed -e '/opcache.huge_code_pages/s/0/1/' -i 10-opcache.ini
 # Set build date from https://reproducible-builds.org/specs/source-date-epoch/
 export SOURCE_DATE_EPOCH=$(date +%s -r NEWS)
 
+%if 0%{?rhel} < 7
 export AUTOHEADER=/usr/bin/autoheader268
 export AUTOCONF=/usr/bin/autoconf268
 
 export PHP_AUTOHEADER=/usr/bin/autoheader268
 export PHP_AUTOCONF=/usr/bin/autoconf268
+%endif # if 0%{?rhel} < 7
 
 # aclocal workaround - to be improved
 cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4
