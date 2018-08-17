@@ -216,7 +216,3 @@ jobs:
             docker push aursu/php72build:7-build-rel
             docker push aursu/php72build:6-build
             docker push aursu/php72build:6-build-rel
-      - store_artifacts:
-          path: ~/el6/RPMS
-      - store_artifacts:
-          path: ~/el7/RPMS
