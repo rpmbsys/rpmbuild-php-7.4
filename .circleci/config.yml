@@ -149,7 +149,7 @@ jobs:
           name: Checkout libargon2
           command: |
             git clone https://github.com/aursu/rpmbuild-argon2.git
-            cd rpmbuild-sodium
+            cd rpmbuild-argon2
             git checkout $ARGON2_VERSION
       - run:
           name: Build libargon2
