@@ -182,7 +182,7 @@
 %global with_libzip 0
 %endif
 
-%global rpmrel 1
+%global rpmrel 2
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1202,7 +1202,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{php_sysconfdir}/php-cgi-fcgi.d
 
 %if %{with_cgi}
 # install ioncube
-install -D -m 755 ioncube/ioncube_loader_lin_7.1.so $RPM_BUILD_ROOT%{php_libdir}/modules/ioncube_loader_lin_7.2.so
+install -D -m 755 ioncube/ioncube_loader_lin_7.2.so $RPM_BUILD_ROOT%{php_libdir}/modules/ioncube_loader_lin_7.2.so
 
 # install config
 sed "s,@LIBDIR@,%{_libdir},g" \
@@ -1564,6 +1564,9 @@ fi
 %endif
 
 %changelog
+* Mon Sep  2 2018 Alexander Ursu <alexander.ursu@gmail.com> - 7.2.9-2
+- Corrected ionCube extension (rpm build bug)
+
 * Thu Aug 16 2018 Remi Collet <remi@remirepo.net> - 7.2.9-1
 - Update to 7.2.9 - http://www.php.net/releases/7_2_9.php
 
