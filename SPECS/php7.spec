@@ -182,12 +182,12 @@
 %global with_libzip 0
 %endif
 
-%global rpmrel 2
+%global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.2.9
+Version: 7.2.10
 Release: %{rpmrel}%{?mytag}%{?aptag}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -1564,6 +1564,9 @@ fi
 %endif
 
 %changelog
+* Tue Sep 11 2018 Remi Collet <remi@remirepo.net> - 7.2.10-1
+- Update to 7.2.10 - http://www.php.net/releases/7_2_10.php
+
 * Mon Sep  2 2018 Alexander Ursu <alexander.ursu@gmail.com> - 7.2.9-2
 - Corrected ionCube extension (rpm build bug)
 
