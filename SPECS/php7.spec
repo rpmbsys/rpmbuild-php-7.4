@@ -182,12 +182,12 @@
 %global with_libzip 0
 %endif
 
-%global rpmrel 2
+%global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.2.13
+Version: 7.2.14
 Release: %{rpmrel}%{?mytag}%{?aptag}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -258,7 +258,6 @@ Patch49: php-5.6.31-no-scan-dir-override.patch
 # Upstream fixes (100+)
 
 # Security fixes (200+)
-Patch200: php-imap.patch
 
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
@@ -781,7 +780,6 @@ low-level PHP extension for the libsodium cryptographic library.
 # upstream patches
 
 # security patches
-%patch200 -p1 -b .imap
 
 # Fixes for tests
 %patch300 -p1
@@ -1566,6 +1564,9 @@ fi
 %endif
 
 %changelog
+* Tue Jan  8 2019 Remi Collet <remi@remirepo.net> - 7.2.14-1
+- Update to 7.2.14 - http://www.php.net/releases/7_2_14.php
+
 * Sat Dec  8 2018 Remi Collet <remi@remirepo.net> - 7.2.13-2
 - Fix null pointer dereference in imap_mail CVE-2018-19935
 
