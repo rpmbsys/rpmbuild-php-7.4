@@ -169,9 +169,13 @@ jobs:
           name: Build PHP 7.2 RPM packages
           command: |
             docker run -ti --rm --net buildnet -u root aursu/rpmbuild:7-build yum -q list --disablerepo=* --enablerepo custom php-devel | grep -q $PHP_VERSION ||
-              docker-compose -f docker-compose.el7.yml up centos7php72 centos7php72rel
+              docker-compose -f docker-compose.el7.yml up centos7php72
+            docker run -ti --rm --net buildnet -u root aursu/rpmbuild:7-build yum -q list --disablerepo=* --enablerepo custom php7-devel | grep -q $PHP_VERSION ||
+              docker-compose -f docker-compose.el7.yml up centos7php72rel
             docker run -ti --rm --net buildnet -u root aursu/rpmbuild:6-build yum -q list --disablerepo=* --enablerepo custom php-devel | grep -q $PHP_VERSION ||
-              docker-compose up centos6php72 centos6php72rel
+              docker-compose up centos6php72
+            docker run -ti --rm --net buildnet -u root aursu/rpmbuild:6-build yum -q list --disablerepo=* --enablerepo custom php7-devel | grep -q $PHP_VERSION ||
+              docker-compose up centos6php72rel
       - run:
           name: Copy RPM packages
           command: |
