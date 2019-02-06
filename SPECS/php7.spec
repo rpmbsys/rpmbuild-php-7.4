@@ -147,15 +147,7 @@
 
 %global mysql_sock %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
-%if 0%{?fedora}
 %global isasuffix -%{__isa_bits}
-%else
-%if 0%{?__isa:1}
-%global isasuffix -%{__isa}
-%else
-%global isasuffix %nil
-%endif
-%endif
 
 %global  _nginx_home    %{_localstatedir}/lib/nginx
 # needed at srpm build time, when httpd-devel not yet installed
@@ -182,7 +174,7 @@
 %global with_libzip 0
 %endif
 
-%global rpmrel 1
+%global rpmrel 2
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -376,8 +368,6 @@ License: PHP and BSD and LGPLv2 and OpenLDAP
 # ABI/API check - Arch specific
 Provides: php(api) = %{apiver}%{isasuffix}
 Provides: php(zend-abi) = %{zendver}%{isasuffix}
-Provides: php(api) = %{apiver}-%{__isa_bits}
-Provides: php(zend-abi) = %{zendver}-%{__isa_bits}
 Provides: php(language) = %{version}, php(language)%{?_isa} = %{version}
 # Provides for all builtin/shared modules:
 # Bzip2 support in PHP is not enabled by default. You will need to use the --with-bz2
@@ -449,8 +439,6 @@ Provides: php-pdo-abi  = %{pdover}
 Provides: php(pdo-abi) = %{pdover}
 Provides: php-pdo-abi  = %{pdover}%{isasuffix}
 Provides: php(pdo-abi) = %{pdover}%{isasuffix}
-Provides: php-pdo-abi  = %{pdover}-%{__isa_bits}
-Provides: php(pdo-abi) = %{pdover}-%{__isa_bits}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
 # PDO and the PDO_SQLITE driver is enabled by default as of PHP 5.1.0
 Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
@@ -1564,6 +1552,9 @@ fi
 %endif
 
 %changelog
+* Wed Feb  6 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.2.14-2
+- fixed zend api RPM version
+
 * Tue Jan  8 2019 Remi Collet <remi@remirepo.net> - 7.2.14-1
 - Update to 7.2.14 - http://www.php.net/releases/7_2_14.php
 
@@ -1652,7 +1643,7 @@ fi
 - enable PHP execution of .phar files, see #1117140
 
 * Tue Sep 12 2017 Alexander Ursu <alexander.ursu@gmail.com> - 7.1.6-4
-- moved xmlrpc into php-common 
+- moved xmlrpc into php-common
 - removed pgsql extension from CGI config
 
 * Wed Jun 28 2017 Alexander Ursu <alexander.ursu@gmail.com> - 7.1.6-2
