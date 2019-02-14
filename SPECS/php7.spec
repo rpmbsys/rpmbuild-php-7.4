@@ -174,12 +174,12 @@
 %global with_libzip 0
 %endif
 
-%global rpmrel 2
+%global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.2.14
+Version: 7.2.15
 Release: %{rpmrel}%{?mytag}%{?aptag}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -1552,6 +1552,9 @@ fi
 %endif
 
 %changelog
+* Wed Feb  6 2019 Remi Collet <remi@remirepo.net> - 7.2.15-1
+- Update to 7.2.15 - http://www.php.net/releases/7_2_15.php
+
 * Wed Feb  6 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.2.14-2
 - fixed zend api RPM version
 
