@@ -9,7 +9,7 @@ jobs:
       POSTGRESQL_VERSION: 9.6.11-1
       SODIUM_VERSION: 1.0.17-1
       ARGON2_VERSION: 20161029-5
-      PHP_VERSION: 7.2.14-2
+      PHP_VERSION: 7.2.15-1
       BINTRAY_REPO: php72custom
       PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-7.2
     steps:
