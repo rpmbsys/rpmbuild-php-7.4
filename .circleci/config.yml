@@ -40,9 +40,12 @@ jobs:
             git submodule sync
             git submodule update --init
       - run:
-          name: Start docker services for rpmbuild
+          name: Pull images for RPM build docker services
           command: |
             docker-compose -f rpmbuild/docker-compose.yml pull
+      - run:
+          name: Start docker services for rpmbuild
+          command: |
             docker-compose -f rpmbuild/docker-compose.yml up -d
           background: true
           no_output_timeout: 2h
