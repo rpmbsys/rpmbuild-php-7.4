@@ -4,6 +4,7 @@ jobs:
     machine:
       docker_layer_caching: true
     environment:
+      LIBZIP_VERSION: 1.5.1-2
       PHP_VERSION: 7.3.0-1
       BINTRAY_REPO: php73custom
       PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-7.3
@@ -59,6 +60,21 @@ jobs:
               docker cp -a ~/el7/RPMS rpmbuild_webrepo_1:/home/centos-7/rpmbuild/
             fi
       - run:
+          name: Checkout libzip
+          command: |
+            git clone https://github.com/aursu/rpmbuild-libzip.git
+            cd rpmbuild-libzip
+            git checkout $LIBZIP_VERSION
+      - run:
+          name: Build libzip
+          command: |
+            docker run -ti --rm --net buildnet -u root aursu/rpmbuild:7-build \
+            yum -q list --disablerepo=* --enablerepo custom libzip-devel | grep -q $LIBZIP_VERSION ||
+            {
+              docker pull aursu/libzipbuild:el7
+              docker-compose -f rpmbuild-libzip/docker-compose.yml up centos7libzipbuild
+            }
+      - run:
           name: Build PHP Docker images
           command: |
             docker-compose build --no-cache
@@ -89,6 +105,11 @@ jobs:
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
               -e BINTRAY_REPO=$BINTRAY_REPO \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
+      - run:
+          name: Deploy PHP 7.3 Docker images
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push aursu/php73build:7-base
       - run:
           name: Build PHP Docker build images
           command: |

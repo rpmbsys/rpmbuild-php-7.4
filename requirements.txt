@@ -1,5 +1,2 @@
 # key file for CircleCI repository cache https://circleci.com/docs/2.0/caching/
-libcurl-devel-7.63.0-5
-postgresql-devel-9.6.11-1
-libsodium-devel-1.0.17-1
-libargon2-devel-20161029-5
+libzip-devel-1.5.1-2
