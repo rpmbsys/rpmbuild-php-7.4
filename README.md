@@ -7,13 +7,9 @@ Sections `Prerequisites` and `Setup` should be done only once per build host
 * Docker CE 17.12.0+ (https://docs.docker.com/install/)
 * Docker Compose 1.10+ (https://github.com/docker/compose/releases/)
 
-### PHP 7.2 Requirements
+### PHP 7.3 Requirements
 
-1. Complete build of curl (https://github.com/aursu/rpmbuild-curl)
-2. Complete build of postgresql (https://github.com/aursu/rpmbuild-postgresql)
-3. Complete build of httpd 2.4 (https://github.com/aursu/rpmbuild-httpd-2.4)
-4. Complete build of libsodium (https://github.com/aursu/rpmbuild-sodium)
-5. Complete build of libargon2 (https://github.com/aursu/rpmbuild-argon2)
+1. Complete build of libzip (https://github.com/aursu/rpmbuild-libzip)
 
 ### Prerequisites
 
@@ -49,12 +45,12 @@ port)
 
 ### Setup
 
-1. Clone build repo with submodules (rpmbuild-php-7.2 is just an example - it could be
+1. Clone build repo with submodules (rpmbuild-php-7.3 is just an example - it could be
 any build repo):
 
     ```
-    git clone --recursive https://github.com/aursu/rpmbuild-php-7.2.git
-    cd rpmbuild-php-7.2
+    git clone --recursive https://github.com/aursu/rpmbuild-php-7.3.git
+    cd rpmbuild-php-7.3
     ```
 
 2. Setup build environment:
@@ -65,7 +61,7 @@ any build repo):
     docker-compose -f rpmbuild/docker-compose.yml pull
     ```
 
-    2.4. Run webrepo service and createrepo service (see
+    2.2. Run webrepo service and createrepo service (see
 https://github.com/aursu/docker-rpmbuild/blob/master/README for details)
 
     ```
@@ -77,7 +73,7 @@ https://github.com/aursu/docker-rpmbuild/blob/master/README for details)
     90705414e549        rpmbuild:createrepo   "/bin/sh -c /usr/loc…"   About a minute ago   Up 42 seconds                            rpmbuild_centos6repo_1
     ```
 
-    2.5. Wait about 1 minute before any other build operation
+    2.3. Wait about 1 minute before any other build operation
 
 ### Build process
 
@@ -102,8 +98,7 @@ to run any of them or run in foreground etc
 ### Access RPM packages
 
 1. Just browse on build host URL http://localhost/ or
-2. use `docker cp` command from container `webrepo` from paths
-`/home/centos-6/rpmbuild/RPMS` and `/home/centos-7/rpmbuild/RPMS`
+2. use `docker cp` command from container `webrepo` from path `/home/centos-7/rpmbuild/RPMS`
 
 ### Complete build
 
