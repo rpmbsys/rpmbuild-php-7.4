@@ -125,11 +125,11 @@
 %global fpm_unit            %{fpm_service}.service
 %global fpm_logrotate       %{fpm_service}
 
-%global apiver      20170718
-%global zendver     20170718
+%global apiver      20180731
+%global zendver     20180731
 %global pdover      20170320
 # Extension version
-%global jsonver     1.6.0
+%global jsonver     1.7.0
 
 # we don't want -z defs linker flag
 %undefine _strict_symbol_defs_build
@@ -179,7 +179,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.2.15
+Version: 7.3.0
 Release: %{rpmrel}%{?mytag}%{?aptag}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -236,15 +236,13 @@ Patch8: php-7.2.0-libdb.patch
 Patch40: php-7.2.4-dlopen.patch
 Patch42: php-7.2.3-systzdata-v16.patch
 # See http://bugs.php.net/53436
-Patch43: php-7.2.12-phpize.patch
+Patch43: php-7.3.0-phpize.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-7.2.3-ldap_r.patch
 # Make php_config.h constant across builds
 Patch46: php-7.2.4-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.6.3-phpinfo.patch
-# getallheaders for FPM backported from 7.3
-Patch48: php-7.2.8-getallheaders.patch
 Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
@@ -308,7 +306,7 @@ BuildRequires: nginx-filesystem
 %endif
 BuildRequires: oniguruma-devel
 BuildRequires: openssl-devel
-BuildRequires: pcre-devel >= 6.6
+BuildRequires: pcre2-devel
 BuildRequires: perl
 BuildRequires: smtpdaemon
 BuildRequires: sqlite-devel >= 3.6.0
@@ -559,7 +557,7 @@ Requires: autoconf
 %else
 Requires: autoconf, autoconf268
 %endif
-Requires: pcre-devel%{?_isa}
+Requires: pcre2-devel%{?_isa}
 
 %description devel
 The php-devel package contains the files needed for building PHP
@@ -762,7 +760,6 @@ low-level PHP extension for the libsodium cryptographic library.
 %endif
 %patch46 -p1
 %patch47 -p1
-%patch48 -p1
 %patch49 -p1
 
 # upstream patches
@@ -779,7 +776,6 @@ cp sapi/fpm/LICENSE fpm_LICENSE
 cp ext/mbstring/libmbfl/LICENSE libmbfl_LICENSE
 cp ext/mbstring/ucgendat/OPENLDAP_LICENSE ucgendat_LICENSE
 cp ext/fileinfo/libmagic/LICENSE libmagic_LICENSE
-cp ext/phar/LICENSE phar_LICENSE
 cp ext/bcmath/libbcmath/COPYING.LIB libbcmath_COPYING
 cp ext/date/lib/LICENSE.rst timelib_LICENSE
 
@@ -802,6 +798,8 @@ rm -f ext/sockets/tests/mcast_ipv?_recv.phpt
 # cause stack exhausion
 rm Zend/tests/bug54268.phpt
 rm Zend/tests/bug68412.phpt
+# tar issue
+rm ext/zlib/tests/004-mb.phpt
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
@@ -1425,7 +1423,7 @@ fi
 %if %{with_common}
 %files common
 %doc CODING_STANDARDS CREDITS EXTENSIONS NEWS README*
-%doc LICENSE TSRM_LICENSE libmagic_LICENSE phar_LICENSE timelib_LICENSE
+%doc LICENSE TSRM_LICENSE libmagic_LICENSE timelib_LICENSE
 %doc libmbfl_LICENSE ucgendat_LICENSE
 %doc php.ini-*
 %config(noreplace) %{php_sysconfdir}/php.ini
@@ -1552,6 +1550,15 @@ fi
 %endif
 
 %changelog
+* Tue Dec  4 2018 Remi Collet <remi@remirepo.net> - 7.3.0-1
+- update to 7.3.0 GA
+- update FPM configuration from upstream
+
+* Thu Oct  4 2018 Remi Collet <remi@remirepo.net> - 7.3.0~rc2-1
+- update to 7.3.0RC2
+- bump API numbers
+- switch from libpcre to libpcre2
+
 * Wed Feb  6 2019 Remi Collet <remi@remirepo.net> - 7.2.15-1
 - Update to 7.2.15 - http://www.php.net/releases/7_2_15.php
 
