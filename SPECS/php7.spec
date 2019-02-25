@@ -1430,12 +1430,9 @@ exit 0
 %endif
 
 %changelog
-* Tue Dec  4 2018 Remi Collet <remi@remirepo.net> - 7.3.0-1
+* Mon Feb 25 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.3.0-1
 - update to 7.3.0 GA
 - update FPM configuration from upstream
-
-* Thu Oct  4 2018 Remi Collet <remi@remirepo.net> - 7.3.0~rc2-1
-- update to 7.3.0RC2
 - bump API numbers
 - switch from libpcre to libpcre2
 
