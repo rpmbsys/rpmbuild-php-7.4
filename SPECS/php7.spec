@@ -32,16 +32,6 @@
 %global with_fpm 0%{?_with_fpm:1}
 %global with_test 0%{?_with_test:1}
 
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
-%global with_ap24 1
-%else
-%global with_ap24 0%{?_with_ap24:1}
-# build could be tagged only on CentOS 6 where httpd-2.2 is default
-%if %{with_ap24}
-%global aptag .ap24
-%endif # if %{with_ap24}
-%endif # if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
-
 # we can not provide devel package without CLI (due to phpize)
 %if %{with_devel}
 %global with_cli 1
@@ -56,11 +46,6 @@
 %global mytag .my
 %global with_cli 1
 %global with_cgi 1
-%endif
-
-# _rundir is defined in RHEL/CentOS 7
-%if 0%{?rhel} < 7
-%global _rundir     /var/run
 %endif
 
 %if %{with_relocation}
@@ -161,18 +146,7 @@
 %global with_argon2 1
 %global with_dtrace 1
 %global with_zip    1
-
-%if 0%{?fedora} || 0%{?rhel} >= 7
-%global db_devel  libdb-devel
-%else
-%global db_devel  db4-devel
-%endif
-
-%if 0%{?fedora} >= 20 || 0%{?rhel} > 7
 %global with_libzip 1
-%else
-%global with_libzip 0
-%endif
 
 %global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
@@ -180,7 +154,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
 Version: 7.3.0
-Release: %{rpmrel}%{?mytag}%{?aptag}%{?dist}
+Release: %{rpmrel}%{?mytag}%{?dist}
 
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -201,7 +175,6 @@ Source5: php-fpm-www.conf
 Source6: php-fpm.service
 Source7: php-fpm.logrotate
 Source9: php.modconf
-Source10: php-fpm.init
 Source12: php-fpm.wants
 Source13: nginx-fpm.conf
 Source14: nginx-php.conf
@@ -219,7 +192,6 @@ Source104: php7-php-fpm.conf
 Source105: php7-php-fpm-www.conf
 Source106: php7-php-fpm.service
 Source107: php7-php-fpm.logrotate
-Source110: php7-php-fpm.init
 Source112: php7-php-fpm.wants
 Source113: php7-nginx-fpm.conf
 Source114: php7-nginx-php.conf
@@ -257,34 +229,21 @@ Patch300: php-5.6.3-datetests.patch
 Patch405: php7-php-7.2.0-includedir.patch
 Patch409: php-7.0.8-relocation.patch
 
-%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires: autoconf >= 2.64
-%else
-BuildRequires: autoconf268
-%endif
 BuildRequires: bison
 BuildRequires: bzip2-devel
-BuildRequires: %{db_devel}
+BuildRequires: libdb-devel
 BuildRequires: flex
 BuildRequires: freetype-devel
 BuildRequires: gcc-c++
 BuildRequires: gdbm-devel
-%if %{with_ap24}
 BuildRequires: httpd-devel >= 2.4
-%else
-BuildRequires: httpd-devel >= 2.2
-BuildRequires: httpd-devel < 2.4
-%endif
 BuildRequires: libacl-devel
 %if %{with_argon2}
 BuildRequires: libargon2-devel
 %endif
 BuildRequires: libc-client-devel
-%if 0%{?rhel} >= 7
 BuildRequires: libcurl-devel
-%else
-BuildRequires: libcurl-devel >= 7.44
-%endif
 BuildRequires: libicu-devel >= 4.0
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
@@ -318,16 +277,9 @@ BuildRequires: zlib-devel
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 
 Requires: httpd-mmn = %{_httpd_mmn}
-%if %{with_ap24}
 # to ensure we are using httpd with filesystem feature (see #1081453)
 Requires: httpd-filesystem >= 2.4
-%endif
-%if 0%{?rhel} >= 7
 Requires: libcurl
-%else
-# fix for: undefined symbol: curl_pushheader_bynum
-Requires: libcurl >= 7.44
-%endif
 
 Requires(pre): httpd
 
@@ -468,7 +420,7 @@ Provides: php-zip, php-zip%{?_isa}
 %endif
 # Zlib support in PHP is not enabled by default. You will need to configure PHP --with-zlib
 Provides: php-zlib, php-zlib%{?_isa}
-%if %{with_ap24} || %{with_libmysql}
+%if %{with_libmysql}
 Provides: %{php_common}%{?_isa} = %{version}-%{baserel}
 %endif
 %if ! %{with_relocation}
@@ -494,9 +446,7 @@ Summary: Command-line interface for PHP
 License: PHP and Zend and BSD and MIT and ASL 1.0 and NCSA and PostgreSQL
 # No interactive mode for CLI/CGI (disabled libedit, readline)
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
-%if %{with_ap24}
 Provides: %{php_cli}%{?_isa} = %{version}-%{baserel}
-%endif
 
 %description cli
 The php-cli package contains the command-line interface
@@ -531,9 +481,7 @@ Group: Development/Languages
 Summary: PHP FastCGI Process Manager
 BuildRequires: libacl-devel
 BuildRequires: nginx-filesystem
-%if 0%{?rhel} >= 7
 %{?systemd_requires}
-%endif
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 Requires(pre): /usr/sbin/useradd
 # for /etc/nginx ownership
@@ -552,11 +500,7 @@ Group: Development/Libraries
 Summary: Files needed for building PHP extensions
 Requires: %{php_cli}%{?_isa} = %{version}-%{baserel}
 Requires: automake
-%if 0%{?fedora} || 0%{?rhel} >= 7
 Requires: autoconf
-%else
-Requires: autoconf, autoconf268
-%endif
 Requires: pcre2-devel%{?_isa}
 
 %description devel
@@ -755,9 +699,7 @@ low-level PHP extension for the libsodium cryptographic library.
 
 %patch42 -p1
 %patch43 -p1
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 %patch45 -p1
-%endif
 %patch46 -p1
 %patch47 -p1
 %patch49 -p1
@@ -862,24 +804,14 @@ cat %{SOURCE50} > 10-opcache.ini
 %endif
 
 # according to https://forum.remirepo.net/viewtopic.php?pid=8407#p8407
-%if 0%{?rhel} >= 7
 %ifarch x86_64
 sed -e '/opcache.huge_code_pages/s/0/1/' -i 10-opcache.ini
 %endif # ifarch x86_64
-%endif # if 0%{?rhel} >= 7
 %endif # if %{with_opcache}
 
 %build
 # Set build date from https://reproducible-builds.org/specs/source-date-epoch/
 export SOURCE_DATE_EPOCH=$(date +%s -r NEWS)
-
-%if 0%{?rhel} < 7
-export AUTOHEADER=/usr/bin/autoheader268
-export AUTOCONF=/usr/bin/autoconf268
-
-export PHP_AUTOHEADER=/usr/bin/autoheader268
-export PHP_AUTOCONF=/usr/bin/autoconf268
-%endif # if 0%{?rhel} < 7
 
 # aclocal workaround - to be improved
 cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4
@@ -1070,9 +1002,7 @@ build --enable-fpm \
     --program-suffix=%{program_suffix} \
 %endif
     --with-fpm-acl \
-%if 0%{?rhel} >= 7
     --with-fpm-systemd \
-%endif
     --disable-cgi \
     --disable-cli \
     ${without_shared} \
@@ -1168,11 +1098,8 @@ cat %{SOURCE1} > httpd-php.conf
 install -D -m 644 httpd-php.conf $RPM_BUILD_ROOT%{_httpd_confdir}/02-php.conf
 
 # Dual config file with httpd >= 2.4 (fedora >= 18)
-%if %{with_ap24}
 install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_modconfdir}/15-php.conf
-%else
-cat %{SOURCE9} httpd-php.conf > $RPM_BUILD_ROOT%{_httpd_confdir}/02-php.conf
-%endif
+
 
 %if %{with_common}
 install -m 755 -d $RPM_BUILD_ROOT%{php_sysconfdir}/php.d
@@ -1228,7 +1155,6 @@ install -D -m 644 %{SOURCE14} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/%{ma
 mv $RPM_BUILD_ROOT%{fpm_config}.default .
 mv $RPM_BUILD_ROOT%{fpm_config_d}/www.conf.default .
 
-%if 0%{?rhel} >= 7
 # install systemd unit files and scripts for handling server startup
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system/%{fpm_service_d}
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
@@ -1241,15 +1167,6 @@ install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/%{fpm_unit}
 install -D -m 644 %{SOURCE12} $RPM_BUILD_ROOT%{_unitdir}/httpd.service.d/%{fpm_service}.conf
 install -D -m 644 %{SOURCE12} $RPM_BUILD_ROOT%{_unitdir}/nginx.service.d/%{fpm_service}.conf
 %endif # if %{with_relocation}
-%else
-# Service
-install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/init.d
-%if %{with_relocation}
-install -m 755 %{SOURCE110} $RPM_BUILD_ROOT%{_sysconfdir}/init.d/%{fpm_service}
-%else
-install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/init.d/%{fpm_service}
-%endif # if %{with_relocation}
-%endif # rhel >= 7
 %endif # with_fpm
 
 %if %{with_modules}
@@ -1351,15 +1268,9 @@ sed -i -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
     -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
     -e "s/@PHP_VERSION@/%{version}/" macros.php
-%if 0%{?rhel} >= 7
 mkdir -p $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d
 install -m 644 -D macros.php \
            $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d/macros.%{php_main}
-%else
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/rpm
-install -m 644 -c macros.php \
-           $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.%{php_main}
-%endif # if 0%{?rhel} >= 7
 %endif # if %{with_devel}
 
 # Remove unpackaged files
@@ -1382,42 +1293,19 @@ getent passwd nginx >/dev/null || \
 exit 0
 
 %post fpm
-%if 0%{?rhel} >= 7
 %systemd_post %{fpm_unit}
-%else
-if [ $1 = 1 ]; then
-    # Initial installation
-    /sbin/chkconfig --add %{fpm_service} 2>/dev/null
-fi
-%endif
 
 %preun fpm
-%if 0%{?rhel} >= 7
 %systemd_preun %{fpm_unit}
-%else
-if [ $1 = 0 ]; then
-    # Package removal, not upgrade
-    /usr/sbin/service %{fpm_service} stop >/dev/null 2>&1
-    /sbin/chkconfig --del %{fpm_service} 2>/dev/null
-fi
-%endif
 
 %postun fpm
-%if 0%{?rhel} >= 7
 %systemd_postun_with_restart %{fpm_unit}
-%else
-if [ $1 -ge 1 ]; then
-    /usr/sbin/service %{fpm_service} condrestart >/dev/null 2>&1 || :
-fi
-%endif
 %endif # if %{with_fpm}
 
 %files
 %{_httpd_moddir}/libphp7.so
 %config(noreplace) %{_httpd_confdir}/02-php.conf
-%if %{with_ap24}
 %config(noreplace) %{_httpd_modconfdir}/15-php.conf
-%endif
 %{_httpd_contentdir}/icons/*.gif
 
 %if %{with_common}
@@ -1485,14 +1373,10 @@ fi
 %config(noreplace) %{fpm_config}
 %config(noreplace) %{fpm_config_d}/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{fpm_logrotate}
-%if 0%{?rhel} >= 7
 %dir %{_sysconfdir}/systemd/system/%{fpm_service_d}
 %{_unitdir}/%{fpm_unit}
 %{_unitdir}/httpd.service.d/%{fpm_service}.conf
 %{_unitdir}/nginx.service.d/%{fpm_service}.conf
-%else
-%{_sysconfdir}/init.d/%{fpm_service}
-%endif
 %dir %{fpm_config_d}
 # log owned by apache for log
 %attr(770,nginx,root) %dir %{fpm_logdir}
@@ -1508,11 +1392,7 @@ fi
 %{php_includedir}
 %{php_libdir}/build
 %{_mandir}/man1/%{bin_php_config}.1*
-%if 0%{?rhel} >= 7
 %{_rpmconfigdir}/macros.d/macros.%{php_main}
-%else
-%{_sysconfdir}/rpm/macros.%{php_main}
-%endif
 %endif # if %{with_devel}
 
 %if %{with_xml}
