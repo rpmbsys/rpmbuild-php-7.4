@@ -4,14 +4,14 @@ services:
     networks:
       - buildnet
     build:
-      context: build/7
+      context: .
       network: buildnet
     image: aursu/php73build:7-build
   centos7php73buildrel:
     networks:
       - buildnet
     build:
-      context: build/7
+      context: .
       dockerfile: Dockerfile.rel
       network: buildnet
     image: aursu/php73build:7-build-rel
