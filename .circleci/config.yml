@@ -109,14 +109,13 @@ jobs:
               -e BINTRAY_REPO=$BINTRAY_REPO \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
       - run:
-          name: Deploy PHP 7.3 Docker images
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push aursu/php73build:7-base
-      - run:
-          name: Build PHP Docker build images
+          name: Build PHP build Docker images
           command: |
             sleep 30
-            docker-compose -f docker-compose.build.yml build --no-cache
+            docker-compose -f build/docker-compose.yml build --no-cache
+      - run:
+          name: Upload PHP build Docker images
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push aursu/php73build:7-build
             docker push aursu/php73build:7-build-rel
