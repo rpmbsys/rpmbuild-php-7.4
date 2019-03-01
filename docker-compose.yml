@@ -1,20 +1,11 @@
 version: "3.5"
 services:
-  centos7php73base:
-    networks:
-      - buildnet
-    build:
-      context: .
-      dockerfile: Dockerfile.base
-      network: buildnet
-    image: aursu/php73build:7-base
   centos7php73:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
-    image: aursu/php73build:el7
   centos7php73rel:
     command: ["-ba", "--with", "relocation"]
     volumes:
@@ -22,15 +13,6 @@ services:
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
-    image: aursu/php73build:el7
-  centos7php73mysql:
-    command: ["-ba", "--with", "libmysql"]
-    volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm7:/home/centos/rpmbuild/RPMS
-    build:
-      context: .
-    image: aursu/php73build:el7
 
 volumes:
   rpms:

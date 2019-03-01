@@ -17,22 +17,8 @@ jobs:
       - run:
           name: Upgrade Docker Compose
           command: |
-            sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+            sudo curl -L https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
-      - run:
-          name: Create Build User/Group
-          command: |
-            if getent group centos; then
-              sudo groupmod -o -g 48 centos
-            else
-              sudo groupadd -o -g 48 centos
-            fi
-
-            if getent passwd centos; then
-              sudo usermod -o -u 48 -g centos centos
-            else
-              sudo useradd -o -u 48 -g centos -M -d /var/www/html centos
-            fi
       - checkout
       - run:
           name: Git submodules sync
@@ -43,76 +29,35 @@ jobs:
           name: Pull images for RPM build docker services
           command: |
             docker-compose -f rpmbuild/docker-compose.yml pull
+            docker-compose -f rpmbuild/docker-compose.bintray.yml pull
+            docker-compose -f rpmbuild/docker-compose.refresh.yml pull
       - run:
           name: Start docker services for rpmbuild
-          command: |
-            docker-compose -f rpmbuild/docker-compose.yml up -d
+          command: docker-compose -f rpmbuild/docker-compose.yml up -d
           background: true
           no_output_timeout: 2h
-      - restore_cache:
-          keys:
-            - rpm-cache-{{ checksum "requirements.txt" }}-{{ checksum "SPECS/php7.spec" }}
-            - rpm-cache-{{ checksum "requirements.txt" }}
-            - rpm-cache-
-      - run:
-          name: Restore Repository
-          command: |
-            sleep 30
-            if [ -d ~/el7/RPMS ]; then
-              sudo chown -R centos:centos ~/el7/RPMS
-              docker cp -a ~/el7/RPMS rpmbuild_webrepo_1:/home/centos-7/rpmbuild/
-            fi
-      - run:
-          name: Checkout libzip
-          command: |
-            git clone https://github.com/aursu/rpmbuild-libzip.git
-            cd rpmbuild-libzip
-            git checkout $LIBZIP_VERSION
-      - run:
-          name: Build libzip
-          command: |
-            docker run -ti --rm --net buildnet -u root aursu/rpmbuild:7-build \
-            yum -q list --disablerepo=* --enablerepo custom libzip-devel | grep -q $LIBZIP_VERSION ||
-            {
-              docker pull aursu/libzipbuild:el7
-              docker-compose -f rpmbuild-libzip/docker-compose.yml up centos7libzipbuild
-            }
       - run:
           name: Build PHP Docker images
           command: |
+            docker-compose -f docker-compose.base.yml build
             docker-compose build --no-cache
       - run:
           name: Build PHP 7.3 RPM packages
-          command: |
-            docker run -ti --rm --net buildnet -u root aursu/rpmbuild:7-build yum -q list --disablerepo=* --enablerepo custom php-devel | grep -q $PHP_VERSION ||
-              docker-compose up centos7php73
-            docker run -ti --rm --net buildnet -u root aursu/rpmbuild:7-build yum -q list --disablerepo=* --enablerepo custom php7-devel | grep -q $PHP_VERSION ||
-              docker-compose up centos7php73rel
-      - run:
-          name: Copy RPM packages
-          command: |
-            sudo rm -rf ~/el7
-            mkdir -p ~/el7
-            docker cp rpmbuild_webrepo_1:/home/centos-7/rpmbuild/RPMS ~/el7/
-            sudo chown -R centos:centos ~/el7/RPMS
-      - save_cache:
-          key: rpm-cache-{{ checksum "requirements.txt" }}-{{ checksum "SPECS/php7.spec" }}
-          paths:
-            - ~/el7/RPMS
+          command: docker-compose up
       - run:
           name: Upload RPM packages into Bintray
           command: |
-            docker-compose -f rpmbuild/docker-compose.bintray.yml pull
             docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
               -e BINTRAY_USER=$BINTRAY_USER \
               -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
               -e BINTRAY_REPO=$BINTRAY_REPO \
               -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
       - run:
+          name: refresh repositories
+          command: docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
+      - run:
           name: Build PHP build Docker images
-          command: |
-            sleep 30
-            docker-compose -f build/docker-compose.yml build --no-cache
+          command: docker-compose -f build/docker-compose.yml build --no-cache --pull
       - run:
           name: Upload PHP build Docker images
           command: |

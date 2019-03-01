@@ -1,2 +1,0 @@
-# key file for CircleCI repository cache https://circleci.com/docs/2.0/caching/
-libzip-devel-1.5.1-2
