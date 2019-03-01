@@ -4,8 +4,6 @@ jobs:
     machine:
       docker_layer_caching: true
     environment:
-      LIBZIP_VERSION: 1.5.1-2
-      PHP_VERSION: 7.3.0-1
       BINTRAY_REPO: php73custom
       PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-7.3
     steps:
