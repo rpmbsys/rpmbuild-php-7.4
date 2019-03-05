@@ -153,7 +153,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.3.0
+Version: 7.3.2
 Release: %{rpmrel}%{?mytag}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -206,7 +206,7 @@ Patch8: php-7.2.0-libdb.patch
 
 # Functional changes
 Patch40: php-7.2.4-dlopen.patch
-Patch42: php-7.2.3-systzdata-v16.patch
+Patch42: php-7.3.2-systzdata-v17.patch
 # See http://bugs.php.net/53436
 Patch43: php-7.3.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -432,6 +432,10 @@ Obsoletes: php-mbstring < %{version}-%{baserel}
 Obsoletes: php-pdo < %{version}-%{baserel}
 Obsoletes: php-soap < %{version}-%{baserel}
 Obsoletes: php-xmlrpc < %{version}-%{baserel}
+%endif
+%if 0%{?rhel} >= 7
+Requires(pre): httpd-filesystem
+Requires: httpd-filesystem
 %endif
 
 %description common
@@ -1430,6 +1434,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Feb  6 2019 Remi Collet <remi@remirepo.net> - 7.3.2-1
+- Update to 7.3.2 - http://www.php.net/releases/7_3_2.php
+
 * Mon Feb 25 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.3.0-1
 - update to 7.3.0 GA
 - update FPM configuration from upstream
