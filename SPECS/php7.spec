@@ -1434,7 +1434,7 @@ exit 0
 %endif
 
 %changelog
-* Mon Mar  5 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.3.2-1
+* Tue Mar  5 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.3.2-1
 - Update to 7.3.2 - http://www.php.net/releases/7_3_2.php
 
 * Mon Feb 25 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.3.0-1
