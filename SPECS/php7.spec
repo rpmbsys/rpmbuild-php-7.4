@@ -153,7 +153,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.3.2
+Version: 7.3.3
 Release: %{rpmrel}%{?mytag}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -206,7 +206,7 @@ Patch8: php-7.2.0-libdb.patch
 
 # Functional changes
 Patch40: php-7.2.4-dlopen.patch
-Patch42: php-7.3.2-systzdata-v17.patch
+Patch42: php-7.3.3-systzdata-v18.patch
 # See http://bugs.php.net/53436
 Patch43: php-7.3.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -218,6 +218,7 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
+Patch100: php-openssl111.patch
 
 # Security fixes (200+)
 
@@ -693,13 +694,13 @@ low-level PHP extension for the libsodium cryptographic library.
 %patch405 -p1
 %else
 %patch5 -p1
-%endif # if %{with_relocation}
+%endif
 
 %patch8 -p1
 
 %if %{with_relocation}
 %patch409 -p1
-%endif # if %{with_relocation}
+%endif
 
 %patch42 -p1
 %patch43 -p1
@@ -709,6 +710,10 @@ low-level PHP extension for the libsodium cryptographic library.
 %patch49 -p1
 
 # upstream patches
+%if 0%{?fedora}
+%patch100 -p1 -b .up
+%endif
+
 
 # security patches
 
@@ -1434,6 +1439,11 @@ exit 0
 %endif
 
 %changelog
+* Wed Mar  6 2019 Remi Collet <remi@remirepo.net> - 7.3.3-1
+- Update to 7.3.3 - http://www.php.net/releases/7_3_3.php
+- add upstream patch for OpenSSL 1.1.1b
+- adapt systzdata patch (v18)
+
 * Tue Mar  5 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.3.2-1
 - Update to 7.3.2 - http://www.php.net/releases/7_3_2.php
 
