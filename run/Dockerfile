@@ -1,4 +1,5 @@
-FROM aursu/centos:7-web
+ARG image=7-base
+FROM aursu/centos:${image}
 
 COPY system/etc/yum.repos.d/bintray-custom.repo /etc/yum.repos.d/bintray-custom.repo
 

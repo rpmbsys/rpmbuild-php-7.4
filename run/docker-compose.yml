@@ -1,6 +1,16 @@
 version: "3.5"
 services:
-  centos7php7run:
+  centos7php73run:
     build:
       context: .
-    image: aursu/php7build:7-runtime
+    image: aursu/php73build:7-runtime
+  centos7php73devbase:
+    build:
+      context: .
+      args:
+        image: 7-nodedev
+    image: aursu/php73build:7-devbase
+  centos7php73dev:
+    build:
+      context: dev
+    image: aursu/php73build:7-dev
