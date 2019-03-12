@@ -10,7 +10,3 @@ services:
       args:
         image: 7-nodedev
     image: aursu/php73build:7-devbase
-  centos7php73dev:
-    build:
-      context: dev
-    image: aursu/php73build:7-dev

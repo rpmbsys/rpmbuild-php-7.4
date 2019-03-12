@@ -58,6 +58,7 @@ jobs:
           command: |
             docker-compose -f build/docker-compose.yml build --no-cache --pull
             docker-compose -f run/docker-compose.yml build --no-cache --pull
+            docker-compose -f run/docker-compose.dev.yml build --no-cache
       - run:
           name: Upload PHP build Docker images
           command: |

@@ -1,0 +1,6 @@
+version: "3.5"
+services:
+  centos7php73dev:
+    build:
+      context: dev
+    image: aursu/php73build:7-dev
