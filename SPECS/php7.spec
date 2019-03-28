@@ -148,7 +148,7 @@
 %global with_zip    1
 %global with_libzip 1
 
-%global rpmrel 1
+%global rpmrel 2
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1124,7 +1124,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{php_sysconfdir}/php-cgi-fcgi.d
 
 %if %{with_cgi}
 # install ioncube
-install -D -m 755 ioncube/ioncube_loader_lin_7.2.so $RPM_BUILD_ROOT%{php_libdir}/modules/ioncube_loader_lin_7.2.so
+install -D -m 755 ioncube/ioncube_loader_lin_7.3.so $RPM_BUILD_ROOT%{php_libdir}/modules/ioncube_loader_lin_7.3.so
 
 # install config
 sed "s,@LIBDIR@,%{_libdir},g" \
@@ -1366,7 +1366,7 @@ exit 0
 %doc sapi/cgi/README*
 
 %files ioncube
-%attr(755,root,root) %{php_libdir}/modules/ioncube_loader_lin_7.2.so
+%attr(755,root,root) %{php_libdir}/modules/ioncube_loader_lin_7.3.so
 %endif
 
 %if %{with_fpm}
@@ -1439,6 +1439,10 @@ exit 0
 %endif
 
 %changelog
+* Thu Mar 28 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.3.3-2
+- fixed ioncube package
+- updated ioncube loader to version 10.3.2
+
 * Wed Mar  6 2019 Remi Collet <remi@remirepo.net> - 7.3.3-1
 - Update to 7.3.3 - http://www.php.net/releases/7_3_3.php
 - add upstream patch for OpenSSL 1.1.1b
