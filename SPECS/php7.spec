@@ -153,7 +153,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.3.3
+Version: 7.3.4
 Release: %{rpmrel}%{?mytag}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -218,7 +218,7 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
-Patch100: php-openssl111.patch
+Patch100: php-upstream.patch
 
 # Security fixes (200+)
 
@@ -276,6 +276,8 @@ BuildRequires: systemtap-sdt-devel
 BuildRequires: unixODBC-devel
 BuildRequires: zlib-devel
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
+# used for tests
+BuildRequires: %{_bindir}/ps
 
 Requires: httpd-mmn = %{_httpd_mmn}
 # to ensure we are using httpd with filesystem feature (see #1081453)
@@ -506,7 +508,14 @@ Summary: Files needed for building PHP extensions
 Requires: %{php_cli}%{?_isa} = %{version}-%{baserel}
 Requires: automake
 Requires: autoconf
+# see "php-config --libs"
+Requires: krb5-devel%{?_isa}
+Requires: libargon2-devel%{?_isa}
+Requires: libedit-devel%{?_isa}
+Requires: libxml2-devel%{?_isa}
+Requires: openssl-devel%{?_isa}
 Requires: pcre2-devel%{?_isa}
+Requires: zlib-devel%{?_isa}
 
 %description devel
 The php-devel package contains the files needed for building PHP
@@ -710,10 +719,7 @@ low-level PHP extension for the libsodium cryptographic library.
 %patch49 -p1
 
 # upstream patches
-%if 0%{?fedora}
 %patch100 -p1 -b .up
-%endif
-
 
 # security patches
 
@@ -1439,6 +1445,11 @@ exit 0
 %endif
 
 %changelog
+* Tue Apr  2 2019 Remi Collet <remi@remirepo.net> - 7.3.4-1
+- Update to 7.3.4 - http://www.php.net/releases/7_3_4.php
+- add upstream patches for failed tests
+- add build dependency on ps command
+
 * Thu Mar 28 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.3.3-2
 - fixed ioncube package
 - updated ioncube loader to version 10.3.2
