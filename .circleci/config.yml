@@ -45,13 +45,13 @@ jobs:
           name: refresh repositories
           command: docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
       - run:
-          name: Build PHP build Docker images
+          name: Build PHP Docker images (PHP 7.3)
           command: |
             docker-compose -f build/docker-compose.yml build --no-cache --pull
             docker-compose -f run/docker-compose.yml build --no-cache --pull
             docker-compose -f run/docker-compose.dev.yml build --no-cache
       - run:
-          name: Upload PHP build Docker images
+          name: Upload PHP Docker images (PHP 7.3)
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push aursu/php73build:7-build
