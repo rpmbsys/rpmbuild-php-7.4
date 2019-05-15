@@ -148,12 +148,12 @@
 %global with_zip    1
 %global with_libzip 1
 
-%global rpmrel 2
+%global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.3.4
+Version: 7.3.5
 Release: %{rpmrel}%{?mytag}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -218,7 +218,6 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
-Patch100: php-upstream.patch
 
 # Security fixes (200+)
 
@@ -719,7 +718,6 @@ low-level PHP extension for the libsodium cryptographic library.
 %patch49 -p1
 
 # upstream patches
-%patch100 -p1 -b .up
 
 # security patches
 
@@ -1445,7 +1443,10 @@ exit 0
 %endif
 
 %changelog
-* Tue Apr  2 2019 Remi Collet <remi@remirepo.net> - 7.3.4-1
+* Wed May  1 2019 Remi Collet <remi@remirepo.net> - 7.3.5-1
+- Update to 7.3.5 - http://www.php.net/releases/7_3_5.php
+
+* Tue Apr  2 2019 Remi Collet <remi@remirepo.net> - 7.3.4-2
 - Update to 7.3.4 - http://www.php.net/releases/7_3_4.php
 - add upstream patches for failed tests
 - add build dependency on ps command

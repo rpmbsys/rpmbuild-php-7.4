@@ -15,7 +15,7 @@ RUN yum -y --enablerepo=bintray-custom --enablerepo=bintray-php73custom install 
         php-pecl-redis4 \
         php-sodium \
         php-xml \
-    && yum clean all && rm -rf /var/cache/yum
+    && yum clean all && rm -rf /var/cache/yum /var/lib/rpm/__db*
 
 # php-fpm configuration
 COPY system/etc/php-fpm.conf /etc/php-fpm.conf
@@ -49,7 +49,13 @@ ENV PHP_INI_SHORT_OPEN_TAG=On \
     PHP_INI_UPLOAD_MAX_FILESIZE=2M \
     PHP_INI_FILE_UPLOADS=On \
     PHP_INI_ALLOW_URL_FOPEN=On \
-    PHP_INI_MEMORY_LIMIT=128M
+    PHP_INI_MEMORY_LIMIT=128M \
+    PHP_INI_DISPLAY_ERRORS=Off \
+    PHP_INI_DISPLAY_STARTUP_ERRORS=Off \
+    PHP_INI_LOG_ERRORS_MAX_LEN=8192 \
+    PHP_INI_DATE_TIMEZONE=Europe/Berlin \
+    PHP_INI_SESSION_COOKIE_HTTPONLY="" \
+    PHP_INI_SESSION_GC_MAXLIFETIME=1440
 
 
 WORKDIR /var/www/html
