@@ -113,7 +113,6 @@
 %global apiver      20180731
 %global zendver     20180731
 %global pdover      20170320
-# Extension version
 %global jsonver     1.7.0
 
 # we don't want -z defs linker flag
@@ -153,7 +152,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.3.9
+Version: 7.3.11
 Release: %{rpmrel}%{?mytag}%{?dist}
 
 # All files licensed under PHP version 3.01, except
