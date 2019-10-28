@@ -180,6 +180,9 @@ Source13: nginx-fpm.conf
 Source14: nginx-php.conf
 Source15: php-cgi-fcgi.ini
 Source16: https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
+# See https://secure.php.net/gpg-keys.php
+Source20: https://www.php.net/distributions/php-keyring.gpg
+Source21: https://www.php.net/distributions/php-%{upver}%{?rcver}.tar.xz.asc
 
 # Configuration files for some extensions
 Source50: 10-opcache.ini
@@ -689,6 +692,7 @@ low-level PHP extension for the libsodium cryptographic library.
 %endif
 
 %prep
+%{gpgverify} --keyring='%{SOURCE20}' --signature='%{SOURCE21}' --data='%{SOURCE0}'
 %setup -q -n php-%{version}
 
 %if %{with_cgi}
@@ -1443,6 +1447,9 @@ exit 0
 %endif
 
 %changelog
+* Tue Oct 22 2019 Remi Collet <remi@remirepo.net> - 7.3.11-1
+- Update to 7.3.11 - http://www.php.net/releases/7_3_11.php
+
 * Wed Aug 28 2019 Remi Collet <remi@remirepo.net> - 7.3.9-1
 - Update to 7.3.9 - http://www.php.net/releases/7_3_9.php
 
