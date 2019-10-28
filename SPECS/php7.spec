@@ -181,7 +181,7 @@ Source15: php-cgi-fcgi.ini
 Source16: https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
 # See https://secure.php.net/gpg-keys.php
 Source20: https://www.php.net/distributions/php-keyring.gpg
-Source21: https://www.php.net/distributions/php-%{upver}%{?rcver}.tar.xz.asc
+Source21: https://www.php.net/distributions/php-%{version}.tar.xz.asc
 
 # Configuration files for some extensions
 Source50: 10-opcache.ini
