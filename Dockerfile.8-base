@@ -1,4 +1,4 @@
-FROM aursu/rpmbuild:7-build
+FROM aursu/rpmbuild:8-build
 
 USER root
 RUN yum -y --enablerepo=PowerTools install \

@@ -114,3 +114,10 @@ jobs:
             docker push aursu/php73build:8-build-rel
             docker push aursu/php73build:8-runtime
             docker push aursu/php73build:8-dev
+
+workflows:
+  version: 2
+  php7build:
+    jobs:
+      - build
+      - build8
