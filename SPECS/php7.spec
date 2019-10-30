@@ -691,7 +691,6 @@ low-level PHP extension for the libsodium cryptographic library.
 %endif
 
 %prep
-%{gpgverify} --keyring='%{SOURCE20}' --signature='%{SOURCE21}' --data='%{SOURCE0}'
 %setup -q -n php-%{version}
 
 %if %{with_cgi}
