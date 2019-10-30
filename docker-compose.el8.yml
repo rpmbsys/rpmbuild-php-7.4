@@ -1,21 +1,23 @@
 version: "3.5"
 services:
-  centos7php73:
+  centos8php73:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
-  centos7php73rel:
+      dockerfile: Dockerfile.el8
+  centos8php73rel:
     command: ["-ba", "--with", "relocation"]
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
+      dockerfile: Dockerfile.el8
 
 volumes:
   rpms:
     name: rpms
-  rpm7:
-    name: rpm7
+  rpm8:
+    name: rpm8
