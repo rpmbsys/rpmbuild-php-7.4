@@ -26,6 +26,7 @@ RUN yum -y --enablerepo=PowerTools install \
         openldap-devel \
         openssl-devel \
         pcre2-devel \
+        perl \
         postgresql-devel \
         sendmail \
         sqlite-devel \
