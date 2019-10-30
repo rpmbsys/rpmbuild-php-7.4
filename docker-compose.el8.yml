@@ -3,7 +3,7 @@ services:
   centos8php73:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm7:/home/centos/rpmbuild/RPMS
+      - rpm8:/home/centos/rpmbuild/RPMS
     build:
       context: .
       dockerfile: Dockerfile.el8
@@ -11,7 +11,7 @@ services:
     command: ["-ba", "--with", "relocation"]
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm7:/home/centos/rpmbuild/RPMS
+      - rpm8:/home/centos/rpmbuild/RPMS
     build:
       context: .
       dockerfile: Dockerfile.el8
