@@ -37,6 +37,7 @@
 %global with_cli 1
 %endif
 
+%global _missing_build_ids_terminate_build 0
 %global with_relocation 0%{?_with_relocation:1}
 
 # with this flag set on we will build php with libmysqlclient library
