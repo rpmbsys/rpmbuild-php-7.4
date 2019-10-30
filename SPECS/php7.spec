@@ -585,7 +585,6 @@ Group: Development/Languages
 License: PHP
 BuildRequires: postgresql-devel
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
-Requires: postgresql-libs
 %global with_modules 1
 
 %description pgsql
