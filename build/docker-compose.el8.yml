@@ -5,16 +5,20 @@ services:
       - buildnet
     build:
       context: .
+      args:
+        centos: 8
       network: buildnet
-    image: aursu/php73build:7-build
+    image: aursu/php73build:8-build
   centos7php73buildrel:
     networks:
       - buildnet
     build:
       context: .
+      args:
+        centos: 8
       dockerfile: Dockerfile.rel
       network: buildnet
-    image: aursu/php73build:7-build-rel
+    image: aursu/php73build:8-build-rel
 
 networks:
   buildnet:
