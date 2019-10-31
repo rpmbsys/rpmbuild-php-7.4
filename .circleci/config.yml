@@ -117,7 +117,7 @@ jobs:
 
 workflows:
   version: 2
-  php7build:
+  php73build:
     jobs:
       - build
       - build8
