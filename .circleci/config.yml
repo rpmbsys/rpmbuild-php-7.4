@@ -45,16 +45,22 @@ jobs:
           command: docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
       - run:
           name: Build PHP Docker images (PHP 7.3)
-          command: |
-            docker-compose -f build/docker-compose.yml build --no-cache --pull
-            docker-compose -f run/docker-compose.yml build --no-cache --pull
-            docker-compose -f run/docker-compose.dev.yml build --no-cache centos7php73dev
+          command: docker-compose -f build/docker-compose.yml build --no-cache --pull
       - run:
           name: Upload PHP Docker images (PHP 7.3)
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push aursu/php73build:7-build
             docker push aursu/php73build:7-build-rel
+      - run:
+          name: Build PHP Docker runtime images (PHP 7.3)
+          command: |
+            docker-compose -f run/docker-compose.yml build --no-cache --pull
+            docker-compose -f run/docker-compose.dev.yml build --no-cache centos7php73dev
+      - run:
+          name: Upload PHP Docker runtime images (PHP 7.3)
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push aursu/php73build:7-runtime
             docker push aursu/php73build:7-dev
   build8:
@@ -102,16 +108,22 @@ jobs:
           command: docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos8refresh
       - run:
           name: Build PHP Docker images (PHP 7.3)
-          command: |
-            docker-compose -f build/docker-compose.el8.yml build --no-cache --pull
-            docker-compose -f run/docker-compose.el8.yml build --no-cache --pull
-            docker-compose -f run/docker-compose.dev.yml build --no-cache centos8php73dev
+          command: docker-compose -f build/docker-compose.el8.yml build --no-cache --pull
       - run:
           name: Upload PHP Docker images (PHP 7.3)
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push aursu/php73build:8-build
             docker push aursu/php73build:8-build-rel
+      - run:
+          name: Build PHP Docker runtime images (PHP 7.3)
+          command: |
+            docker-compose -f run/docker-compose.el8.yml build --no-cache --pull
+            docker-compose -f run/docker-compose.dev.yml build --no-cache centos8php73dev
+      - run:
+          name: Upload PHP Docker runtime images (PHP 7.3)
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push aursu/php73build:8-runtime
             docker push aursu/php73build:8-dev
 
