@@ -3,7 +3,7 @@ FROM aursu/centos:${image}
 
 COPY system/etc/yum.repos.d/bintray-custom.repo /etc/yum.repos.d/bintray-custom.repo
 
-RUN yum -y --enablerepo=bintray-custom --enablerepo=bintray-php73custom install \
+RUN yum -y --enablerepo=bintray-custom --enablerepo=bintray-php73custom --skip-broken install \
         php-bcmath \
         php-cli \
         php-fpm \
@@ -15,7 +15,7 @@ RUN yum -y --enablerepo=bintray-custom --enablerepo=bintray-php73custom install 
         php-pecl-redis4 \
         php-sodium \
         php-xml \
-    && yum clean all && rm -rf /var/cache/yum /var/lib/rpm/__db*
+    && yum clean all && rm -rf /var/cache/dnf /var/cache/yum /var/lib/rpm/__db*
 
 # php-fpm configuration
 COPY system/etc/php-fpm.conf /etc/php-fpm.conf
