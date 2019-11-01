@@ -1,9 +1,11 @@
-ARG image=7-web
+ARG image=8-web
 FROM aursu/centos:${image}
 
 COPY system/etc/yum.repos.d/bintray-custom.repo /etc/yum.repos.d/bintray-custom.repo
 
-RUN yum -y --enablerepo=bintray-custom --enablerepo=bintray-php73custom --skip-broken install \
+RUN dnf -y install libzip \
+    && dnf -y module disable php \
+    && dnf -y --enablerepo=bintray-custom --enablerepo=bintray-php73custom --skip-broken install \
         php-bcmath \
         php-cli \
         php-fpm \
@@ -15,7 +17,7 @@ RUN yum -y --enablerepo=bintray-custom --enablerepo=bintray-php73custom --skip-b
         php-pecl-redis4 \
         php-sodium \
         php-xml \
-    && yum clean all && rm -rf /var/cache/yum /var/lib/rpm/__db*
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
 
 # php-fpm configuration
 COPY system/etc/php-fpm.conf /etc/php-fpm.conf
