@@ -1,0 +1,19 @@
+[bintray-custom]
+name=bintray-custom
+baseurl=https://dl.bintray.com/aursu/custom/centos/$releasever/
+gpgcheck=0
+repo_gpgcheck=0
+enabled=0
+sslverify=0
+# https://dnf.readthedocs.io/en/latest/modularity.html#hotfix-repositories
+module_hotfixes=true
+
+[bintray-php73custom]
+name=bintray-php73custom
+baseurl=https://dl.bintray.com/aursu/php73custom/centos/$releasever/
+gpgcheck=0
+repo_gpgcheck=0
+enabled=0
+sslverify=0
+# https://dnf.readthedocs.io/en/latest/modularity.html#hotfix-repositories
+module_hotfixes=true
