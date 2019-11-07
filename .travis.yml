@@ -43,11 +43,12 @@ deploy:
 
 jobs:
   include:
-    - stage: docker
+    - stage: build
       before_install:
         - docker-compose -f rpmbuild/docker-compose.yml pull  centos7repo centos8repo webrepo
       install:
         - docker-compose -f rpmbuild/docker-compose.yml up -d centos7repo centos8repo webrepo
+      before_script: skip
       script:
         - docker-compose -f build/docker-compose.yml build --no-cache --pull
       before_deploy:
@@ -57,11 +58,12 @@ jobs:
         script: docker-compose -f build/docker-compose.yml push
         on:
           all_branches: true
-    - stage: docker
+    - stage: build
       before_install:
         - docker-compose -f rpmbuild/docker-compose.yml pull  centos7repo centos8repo webrepo
       install:
         - docker-compose -f rpmbuild/docker-compose.yml up -d  centos7repo centos8repo webrepo
+      before_script: skip
       script:
         - docker-compose -f build/docker-compose.el8.yml build --no-cache --pull
       before_deploy:
@@ -71,3 +73,48 @@ jobs:
         script: docker-compose -f build/docker-compose.el8.yml push
         on:
           all_branches: true
+    - stage: runtime
+      before_install: skip
+      install: skip
+      before_script: skip
+      script:
+        - docker-compose -f run/docker-compose.yml build --no-cache --pull
+      before_deploy:
+        - docker login -u $DOCKER_USER -p $DOCKER_PASS
+      deploy:
+        provider: script
+        script: docker-compose -f run/docker-compose.yml push
+        on:
+          all_branches: true
+    - stage: runtime
+      before_install: skip
+      install: skip
+      before_script: skip
+      script:
+        - docker-compose -f run/docker-compose.el8.yml build --no-cache --pull
+      before_deploy:
+        - docker login -u $DOCKER_USER -p $DOCKER_PASS
+      deploy:
+        provider: script
+        script: docker-compose -f run/docker-compose.el8.yml push
+        on:
+          all_branches: true
+    - stage: dev
+      before_install: skip
+      install: skip
+      before_script: skip
+      script:
+        - docker-compose -f run/docker-compose.dev.yml build --no-cache --pull
+      before_deploy:
+        - docker login -u $DOCKER_USER -p $DOCKER_PASS
+      deploy:
+        provider: script
+        script: docker-compose -f run/docker-compose.dev.yml push
+        on:
+          all_branches: true
+
+stages:
+  - test
+  - build
+  - runtime
+  - dev
