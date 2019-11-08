@@ -1,6 +1,7 @@
 ## Build process setup
 
 [![Build Status](https://travis-ci.org/aursu/rpmbuild-php-7.3.svg?branch=master)](https://travis-ci.org/aursu/rpmbuild-php-7.3)
+[![CircleCI](https://circleci.com/gh/aursu/rpmbuild-php-7.3.svg?style=svg)](https://circleci.com/gh/aursu/rpmbuild-php-7.3)
 
 Sections `Prerequisites` and `Setup` should be done only once per build host
 
