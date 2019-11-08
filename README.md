@@ -11,7 +11,7 @@ Sections `Prerequisites` and `Setup` should be done only once per build host
 
 ### PHP 7.3 Requirements
 
-1. Complete build of libzip (https://github.com/aursu/rpmbuild-libzip)
+1. Complete build of libzip on CentOS 7 (https://github.com/aursu/rpmbuild-libzip)
 
 ### Prerequisites
 
@@ -47,8 +47,7 @@ port)
 
 ### Setup
 
-1. Clone build repo with submodules (rpmbuild-php-7.3 is just an example - it could be
-any build repo):
+1. Clone build repo with submodules:
 
     ```
     git clone --recursive https://github.com/aursu/rpmbuild-php-7.3.git
@@ -92,7 +91,7 @@ https://github.com/aursu/docker-rpmbuild/blob/master/README for details)
     docker-compose up -d
     ```
 
-    command above will start all build serrvices in background. But it is possible
+    command above will start all build services in background. But it is possible
 to run any of them or run in foreground etc
 
 3. Wait until command `docker-compose ps` returns all services in state 'Exit 0'
@@ -102,7 +101,7 @@ to run any of them or run in foreground etc
 1. Just browse on build host URL http://localhost/ or
 2. use `docker cp` command from container `webrepo` from path `/home/centos-7/rpmbuild/RPMS`
 
-### Complete build
+### Cleanup build
 
 To complete all build processes run commands:
 
