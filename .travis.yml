@@ -10,7 +10,6 @@ addons:
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.24.1
     - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-php-7.3
     - BINTRAY_REPO=php73custom
   jobs:
@@ -18,10 +17,6 @@ env:
     - BUILD_COMPOSE_FILE=docker-compose.yml       BASE=centos7php73base BUILD=centos7php73rel UPLOADER=centos7bintray
     - BUILD_COMPOSE_FILE=docker-compose.el8.yml   BASE=centos8php73base BUILD=centos8php73    UPLOADER=centos8bintray
     - BUILD_COMPOSE_FILE=docker-compose.el8.yml   BASE=centos8php73base BUILD=centos8php73rel UPLOADER=centos8bintray
-
-before_install:
-  - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-  - sudo chmod +x /usr/local/bin/docker-compose
 
 install:
   - docker-compose -f docker-compose.base.yml build --no-cache --pull ${BASE}
@@ -74,7 +69,6 @@ jobs:
         on:
           all_branches: true
     - stage: runtime
-      before_install: skip
       install: skip
       before_script: skip
       script:
@@ -87,7 +81,6 @@ jobs:
         on:
           all_branches: true
     - stage: runtime
-      before_install: skip
       install: skip
       before_script: skip
       script:
@@ -100,7 +93,6 @@ jobs:
         on:
           all_branches: true
     - stage: dev
-      before_install: skip
       install: skip
       before_script: skip
       script:
