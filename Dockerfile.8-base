@@ -10,6 +10,7 @@ RUN dnf -y install \
         libacl-devel \
         libcurl-devel \
         libdb-devel \
+        libffi-devel \
         libicu-devel \
         libjpeg-turbo-devel \
         libpng-devel \
