@@ -1,14 +1,14 @@
 version: "3.5"
 services:
-  centos8php73run:
+  centos8php74run:
     build:
       context: .
       dockerfile: Dockerfile.el8
-    image: aursu/php73build:8-runtime
-  centos8php73devbase:
+    image: aursu/php74build:8-runtime
+  centos8php74devbase:
     build:
       context: .
       dockerfile: Dockerfile.el8
       args:
         image: 8-nodedev
-    image: aursu/php73build:8-devbase
+    image: aursu/php74build:8-devbase

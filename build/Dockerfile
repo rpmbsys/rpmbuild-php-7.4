@@ -5,7 +5,7 @@ USER root
 
 COPY system/etc/yum.repos.d/bintray-custom.repo /etc/yum.repos.d/bintray-custom.repo
 
-RUN yum -y --enablerepo=custom --enablerepo=bintray-custom --enablerepo=bintray-php73custom install \
+RUN yum -y --enablerepo=custom --enablerepo=bintray-custom --enablerepo=bintray-php74custom install \
         php-cli \
         php-common \
         php-devel \

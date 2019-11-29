@@ -1,20 +1,20 @@
 version: "3.5"
 services:
-  centos7php73build:
+  centos7php74build:
     networks:
       - buildnet
     build:
       context: .
       network: buildnet
-    image: aursu/php73build:7-build
-  centos7php73buildrel:
+    image: aursu/php74build:7-build
+  centos7php74buildrel:
     networks:
       - buildnet
     build:
       context: .
       dockerfile: Dockerfile.rel
       network: buildnet
-    image: aursu/php73build:7-build-rel
+    image: aursu/php74build:7-build-rel
 
 networks:
   buildnet:

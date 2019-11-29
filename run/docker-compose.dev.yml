@@ -1,12 +1,12 @@
 version: "3.5"
 services:
-  centos7php73dev:
+  centos7php74dev:
     build:
       context: dev
-    image: aursu/php73build:7-dev
-  centos8php73dev:
+    image: aursu/php74build:7-dev
+  centos8php74dev:
     build:
       context: dev
       args:
         image: 8-devbase
-    image: aursu/php73build:8-dev
+    image: aursu/php74build:8-dev
