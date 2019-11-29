@@ -166,11 +166,11 @@ diff -rup php-7.0.8.orig/sapi/fpm/php-fpm.conf.in php-7.0.8/sapi/fpm/php-fpm.con
  ;  - @prefix@ otherwise
 -include=@php_fpm_sysconfdir@/php-fpm.d/*.conf
 +include=@php_fpm_sysconfdir@/php7-fpm.d/*.conf
-diff -rup php-7.0.8.orig/sapi/fpm/php-fpm.service.in php-7.0.8/sapi/fpm/php-fpm.service.in
---- php-7.0.8.orig/sapi/fpm/php-fpm.service.in	2016-06-21 21:56:41.000000000 +0200
-+++ php-7.0.8/sapi/fpm/php-fpm.service.in	2016-07-21 17:47:03.928000000 +0200
+diff -rup php-7.4.0.orig/sapi/fpm/php-fpm.service.in php-7.4.0/sapi/fpm/php-fpm.service.in
+--- php-7.4.0.orig/sapi/fpm/php-fpm.service.in  2019-11-26 20:13:37.000000000 +0000
++++ php-7.4.0/sapi/fpm/php-fpm.service.in       2019-11-29 22:28:47.649965000 +0000
 @@ -8,8 +8,8 @@ After=network.target
- 
+
  [Service]
  Type=@php_fpm_systemd@
 -PIDFile=@EXPANDED_LOCALSTATEDIR@/run/php-fpm.pid
@@ -178,8 +178,8 @@ diff -rup php-7.0.8.orig/sapi/fpm/php-fpm.service.in php-7.0.8/sapi/fpm/php-fpm.
 +PIDFile=@EXPANDED_LOCALSTATEDIR@/run/php7-fpm.pid
 +ExecStart=@EXPANDED_SBINDIR@/php7-fpm --nodaemonize --fpm-config @EXPANDED_SYSCONFDIR@/php7-fpm.conf
  ExecReload=/bin/kill -USR2 $MAINPID
- PrivateTmp=true
- 
+
+ # Set up a new file system namespace and mounts private /tmp and /var/tmp directories
 diff -rup php-7.0.8.orig/scripts/Makefile.frag php-7.0.8/scripts/Makefile.frag
 --- php-7.0.8.orig/scripts/Makefile.frag	2016-06-21 21:56:19.000000000 +0200
 +++ php-7.0.8/scripts/Makefile.frag	2016-07-21 16:07:44.945000000 +0200
@@ -192,9 +192,9 @@ diff -rup php-7.0.8.orig/scripts/Makefile.frag php-7.0.8/scripts/Makefile.frag
  phpbuilddir = $(libdir)/build
  
  BUILD_FILES = \
-@@ -21,9 +21,6 @@ BUILD_FILES_EXEC = \
- 	config.guess \
- 	config.sub
+@@ -22,9 +22,6 @@ BUILD_FILES_EXEC = \
+ 	build/config.guess \
+ 	build/config.sub
  
 -bin_SCRIPTS = phpize php-config
 -man_PAGES = phpize php-config
