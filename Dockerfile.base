@@ -8,7 +8,6 @@ RUN yum -y install \
         gdbm-devel \
         httpd-devel \
         libacl-devel \
-        libargon2-devel \
         libcurl-devel \
         libdb-devel \
         libicu-devel \

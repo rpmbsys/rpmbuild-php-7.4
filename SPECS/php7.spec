@@ -20,6 +20,7 @@
 %global with_bcmath 0%{!?_without_bcmath:1}
 %global with_posix 0%{!?_without_posix:1}
 %global with_sodium 0%{!?_without_sodium:1}
+%global with_ffi 0%{!?_without_ffi:1}
 %global with_devel 0%{!?_without_devel:1}
 %global with_common 0%{!?_without_common:1}
 
@@ -39,15 +40,6 @@
 
 %global _missing_build_ids_terminate_build 0
 %global with_relocation 0%{?_with_relocation:1}
-
-# with this flag set on we will build php with libmysqlclient library
-%global with_libmysql 0%{?_with_libmysql:1}
-
-%if %{with_libmysql}
-%global mytag .my
-%global with_cli 1
-%global with_cgi 1
-%endif
 
 %if %{with_relocation}
 %global program_suffix      7
@@ -111,10 +103,9 @@
 %global fpm_unit            %{fpm_service}.service
 %global fpm_logrotate       %{fpm_service}
 
-%global apiver      20180731
-%global zendver     20180731
+%global apiver      20190902
+%global zendver     20190902
 %global pdover      20170320
-%global jsonver     1.7.0
 
 # we don't want -z defs linker flag
 %undefine _strict_symbol_defs_build
@@ -139,22 +130,18 @@
 %{!?_httpd_mmn:         %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo 0-0)}}
 
 %{!?_httpd_apxs: %global _httpd_apxs %{_sbindir}/apxs}
-%{!?_httpd_contentdir: %global _httpd_contentdir /var/www}
 %{!?_httpd_confdir: %global _httpd_confdir %{_sysconfdir}/httpd/conf.d}
 %{!?_httpd_moddir: %global _httpd_moddir %{_libdir}/httpd/modules}
 
-%global with_argon2 1
-%global with_dtrace 1
 %global with_zip    1
-%global with_libzip 1
 
 %global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.3.12
-Release: %{rpmrel}%{?mytag}%{?dist}
+Version: 7.4.0
+Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -187,6 +174,7 @@ Source21: https://www.php.net/distributions/php-%{version}.tar.xz.asc
 # Configuration files for some extensions
 Source50: 10-opcache.ini
 Source51: opcache-default.blacklist
+Source53: 20-ffi.ini
 
 # relocation resources
 Source101: php7-php.conf
@@ -201,19 +189,16 @@ Source114: php7-nginx-php.conf
 Source150: php7-10-opcache.ini
 
 # Build fixes
-Patch1: php-7.1.7-httpd.patch
+Patch1: php-7.4.0-httpd.patch
 Patch5: php-7.2.0-includedir.patch
-Patch6: php-5.6.3-embed.patch
-Patch7: php-5.3.0-recode.patch
 Patch8: php-7.2.0-libdb.patch
 
 # Functional changes
-Patch40: php-7.2.4-dlopen.patch
 Patch42: php-7.3.3-systzdata-v18.patch
 # See http://bugs.php.net/53436
-Patch43: php-7.3.0-phpize.patch
+Patch43: php-7.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
-Patch45: php-7.2.3-ldap_r.patch
+Patch45: php-7.4.0-ldap_r.patch
 # Make php_config.h constant across builds
 Patch46: php-7.2.4-fixheader.patch
 # drop "Configure command" from phpinfo output
@@ -242,41 +227,32 @@ BuildRequires: gcc-c++
 BuildRequires: gdbm-devel
 BuildRequires: httpd-devel >= 2.4
 BuildRequires: libacl-devel
-%if %{with_argon2}
-BuildRequires: libargon2-devel
-%endif
 BuildRequires: libc-client-devel
-BuildRequires: libcurl-devel
-BuildRequires: libicu-devel >= 4.0
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libtool >= 1.4.3
 BuildRequires: libtool-ltdl-devel
 BuildRequires: libwebp-devel
-BuildRequires: libxml2-devel
-%if %{with_libzip}
 BuildRequires: libzip-devel >= 0.11
-Obsoletes: php-pecl-zip < 1.11
-%endif
-%if %{with_libmysql}
-BuildRequires: mysql-devel
-%endif
 %if %{with_fpm}
 # to ensure we are using nginx with filesystem feature (see #1142298)
 BuildRequires: nginx-filesystem
 %endif
-BuildRequires: oniguruma-devel
-BuildRequires: openssl-devel
-BuildRequires: pcre2-devel
+BuildRequires: openssl-devel >= 1.0.1
+BuildRequires: pkgconfig(icu-i18n) >= 50.1
+BuildRequires: pkgconfig(icu-io)   >= 50.1
+BuildRequires: pkgconfig(icu-uc)   >= 50.1
+BuildRequires: pkgconfig(libcurl) >= 7.15.5
+BuildRequires: pkgconfig(libpcre2-8) >= 10.30
+BuildRequires: pkgconfig(libxml-2.0)
+BuildRequires: pkgconfig(oniguruma) >= 6.8
+BuildRequires: pkgconfig(sqlite3) >= 3.7.4
+BuildRequires: pkgconfig(zlib) >= 1.2.0.4
 BuildRequires: perl
 BuildRequires: smtpdaemon
-BuildRequires: sqlite-devel >= 3.6.0
-%if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel
-%endif
 BuildRequires: unixODBC-devel
-BuildRequires: zlib-devel
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 # used for tests
 BuildRequires: %{_bindir}/ps
@@ -289,10 +265,6 @@ Requires: libcurl
 Requires(pre): httpd
 
 # Don't provides extensions, which are not shared library, as .so
-# RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_libdir}/modules/.*\.so$}
-%{?filter_setup}
-# RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_libdir}/modules/.*\\.so$
 
 # php engine for Apache httpd webserver
@@ -379,11 +351,8 @@ Provides: php-mysqli%{?_isa} = %{version}-%{baserel}
 Provides: php-mysqli = %{version}-%{baserel}
 # mysql extension was DEPRECATED in PHP 5.5.0, and it was removed in PHP 7.0.0
 # As of 5.4.0 The MySQL Native Driver is now the default for all MySQL extensions
-%if ! %{with_libmysql}
 Provides: php-mysqlnd = %{version}-%{baserel}
 Provides: php-mysqlnd%{?_isa} = %{version}-%{baserel}
-%endif
-Provides: bundled(oniguruma) = 5.9.6
 # To use PHP's OpenSSL support you must also compile PHP --with-openssl
 Provides: php-openssl, php-openssl%{?_isa}
 # core PHP extension, so it is always enabled
@@ -397,10 +366,10 @@ Provides: php(pdo-abi) = %{pdover}%{isasuffix}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
 # PDO and the PDO_SQLITE driver is enabled by default as of PHP 5.1.0
 Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
-Provides: php-pecl(json)         = %{jsonver}
-Provides: php-pecl(json)%{?_isa} = %{jsonver}
-Provides: php-pecl-json          = %{jsonver}
-Provides: php-pecl-json%{?_isa}  = %{jsonver}
+Provides:  php-pecl(json)         = %{version}
+Provides:  php-pecl(json)%{?_isa} = %{version}
+Provides:  php-pecl-json          = %{version}
+Provides:  php-pecl-json%{?_isa}  = %{version}
 # The Phar extension is built into PHP as of PHP version 5.3.0
 Provides: php-phar, php-phar%{?_isa}
 # they are part of the PHP core
@@ -420,14 +389,11 @@ Provides: php-tokenizer, php-tokenizer%{?_isa}
 # XML-RPC support in PHP is not enabled by default. You will need to use the --with-xmlrpc
 Provides: php-xmlrpc, php-xmlrpc%{?_isa}
 %if %{with_zip}
-# compile PHP with zip support by using the --enable-zip
+# compile PHP with zip support by using the --with-zip
 Provides: php-zip, php-zip%{?_isa}
 %endif
 # Zlib support in PHP is not enabled by default. You will need to configure PHP --with-zlib
 Provides: php-zlib, php-zlib%{?_isa}
-%if %{with_libmysql}
-Provides: %{php_common}%{?_isa} = %{version}-%{baserel}
-%endif
 %if ! %{with_relocation}
 Obsoletes: php-dba < %{version}-%{baserel}
 Obsoletes: php-gd < %{version}-%{baserel}
@@ -473,15 +439,15 @@ Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 The php-cgi package contains the CGI interface executing
 PHP scripts, /usr/bin/php-cgi
 
-%package ioncube
-Summary: ionCube extension for PHP
-Group: Development/Languages
-Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
+#%package ioncube
+#Summary: ionCube extension for PHP
+#Group: Development/Languages
+#Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 
-%description ioncube
-ionCube Loader extensions for PHP. The ionCube
-Loader is loaded as a PHP engine extension. This extension
-transparently detects and loads encoded files.
+#%description ioncube
+#ionCube Loader extensions for PHP. The ionCube
+#Loader is loaded as a PHP engine extension. This extension
+#transparently detects and loads encoded files.
 %endif
 
 %if %{with_fpm}
@@ -490,7 +456,7 @@ Group: Development/Languages
 Summary: PHP FastCGI Process Manager
 BuildRequires: libacl-devel
 BuildRequires: nginx-filesystem
-%{?systemd_requires}
+BuildRequires: pkgconfig(libsystemd) >= 209
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 Requires(pre): /usr/sbin/useradd
 # for /etc/nginx ownership
@@ -512,10 +478,8 @@ Requires: automake
 Requires: autoconf
 # see "php-config --libs"
 Requires: krb5-devel%{?_isa}
-Requires: libargon2-devel%{?_isa}
-Requires: libedit-devel%{?_isa}
 Requires: libxml2-devel%{?_isa}
-Requires: openssl-devel%{?_isa}
+Requires: openssl-devel%{?_isa} >= 1.0.1
 Requires: pcre2-devel%{?_isa}
 Requires: zlib-devel%{?_isa}
 
@@ -558,17 +522,14 @@ Provides: php-dom, php-dom%{?_isa}
 Provides: php-domxml, php-domxml%{?_isa}
 # This extension is enabled by default.
 Provides: php-simplexml, php-simplexml%{?_isa}
-# compile PHP with --enable-wddx
-Provides: php-wddx, php-wddx%{?_isa}
 # enabled by default as of PHP 5.1.2
 Provides: php-xmlreader, php-xmlreader%{?_isa}
 # This extension is enabled by default.
 Provides: php-xmlwriter, php-xmlwriter%{?_isa}
 # PHP 5 includes the XSL extension by default and can be enabled by adding the argument --with-xsl
 Provides: php-xsl, php-xsl%{?_isa}
-BuildRequires: libxml2-devel
-BuildRequires: libxslt-devel
-Requires: libxslt
+BuildRequires: pkgconfig(libxslt)  >= 1.1
+BuildRequires: pkgconfig(libexslt)
 %global with_modules 1
 
 %description xml
@@ -640,7 +601,7 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
-BuildRequires: cyrus-sasl-devel
+BuildRequires: pkgconfig(libsasl2)
 BuildRequires: openldap-devel
 %global with_modules 1
 
@@ -690,13 +651,32 @@ The php-sodium package provides a simple,
 low-level PHP extension for the libsodium cryptographic library.
 %endif
 
+%if %{with_ffi}
+%package ffi
+Summary: Foreign Function Interface
+# All files licensed under PHP version 3.0.1
+License: PHP
+Group: System Environment/Libraries
+BuildRequires:  pkgconfig(libffi)
+Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
+%global with_modules 1
+
+%description ffi
+FFI is one of the features that made Python and LuaJIT very useful for fast
+prototyping. It allows calling C functions and using C data types from pure
+scripting language and therefore develop “system code” more productively.
+
+For PHP, FFI opens a way to write PHP extensions and bindings to C libraries
+in pure PHP.
+%endif
+
 %prep
 %setup -q -n php-%{version}
 
-%if %{with_cgi}
-# ionCube Loader
-%setup -q -n php-%{version} -T -D -a 16
-%endif
+#%if %{with_cgi}
+## ionCube Loader
+#%setup -q -n php-%{version} -T -D -a 16
+#%endif
 
 %patch1 -p1
 
@@ -731,9 +711,8 @@ cp Zend/LICENSE Zend/ZEND_LICENSE
 cp TSRM/LICENSE TSRM_LICENSE
 cp sapi/fpm/LICENSE fpm_LICENSE
 cp ext/mbstring/libmbfl/LICENSE libmbfl_LICENSE
-cp ext/mbstring/ucgendat/OPENLDAP_LICENSE ucgendat_LICENSE
 cp ext/fileinfo/libmagic/LICENSE libmagic_LICENSE
-cp ext/bcmath/libbcmath/COPYING.LIB libbcmath_COPYING
+cp ext/bcmath/libbcmath/LICENSE libbcmath_LICENSE
 cp ext/date/lib/LICENSE.rst timelib_LICENSE
 
 # Multiple builds for multiple SAPIs
@@ -788,13 +767,6 @@ if test "x${vpdo}" != "x%{pdover}"; then
    exit 1
 fi
 
-ver=$(sed -n '/#define PHP_JSON_VERSION /{s/.* "//;s/".*$//;p}' ext/json/php_json.h)
-if test "$ver" != "%{jsonver}"; then
-   : Error: Upstream JSON version is now ${ver}, expecting %{jsonver}.
-   : Update the %{jsonver} macro and rebuild.
-   exit 1
-fi
-
 # https://bugs.php.net/63362 - Not needed but installed headers.
 # Drop some Windows specific headers to avoid installation,
 # before build to ensure they are really not needed.
@@ -817,6 +789,7 @@ cat %{SOURCE150} > 10-opcache.ini
 %else
 cat %{SOURCE50} > 10-opcache.ini
 %endif
+cp %{SOURCE51} %{SOURCE53} .
 
 # according to https://forum.remirepo.net/viewtopic.php?pid=8407#p8407
 %ifarch x86_64
@@ -827,9 +800,6 @@ sed -e '/opcache.huge_code_pages/s/0/1/' -i 10-opcache.ini
 %build
 # Set build date from https://reproducible-builds.org/specs/source-date-epoch/
 export SOURCE_DATE_EPOCH=$(date +%s -r NEWS)
-
-# aclocal workaround - to be improved
-cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4
 
 # Force use of system libtool:
 libtoolize --force --copy
@@ -859,13 +829,14 @@ mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 # Always static:
 # date, filter, libxml, reflection, spl: not supported
 # hash: for PHAR_SIG_SHA256 and PHAR_SIG_SHA512
-# session: dep on hash, used by soap and wddx
-# pcre: used by filter, zip
+# session: dep on hash, used by soap
+# pcre: used by filter
 # openssl: for PHAR_SIG_OPENSSL
 # zlib: used by image
 
 ln -sf ../configure
 %configure \
+    --enable-rtld-now \
     --cache-file=../config.cache \
     --disable-debug \
     --disable-phpdbg \
@@ -873,59 +844,46 @@ ln -sf ../configure
     --enable-dba --with-db4=%{_prefix} --with-gdbm \
     --enable-exif \
     --enable-ftp \
+    --enable-gd \
     --enable-intl \
     --enable-mbstring \
     --enable-mbregex \
     --enable-pdo \
     --enable-soap \
-%if %{with_zip}
-    --enable-zip \
-%if %{with_libzip}
-    --with-libzip \
-%endif
-%endif
     --libdir=%{php_libdir} \
 %if %{with_relocation}
     --sysconfdir=%{php_sysconfdir} \
 %endif
     --with-bz2 \
     --with-config-file-path=%{php_sysconfdir} \
-    --with-curl=%{_prefix} \
-    --with-freetype-dir=%{_prefix} \
-    --with-gd \
+    --with-curl \
+    --with-external-pcre \
+    --with-freetype=%{_prefix} \
     --with-gettext \
-    --with-icu-dir=%{_prefix} \
     --with-imap \
     --with-imap-ssl \
-    --with-jpeg-dir=%{_prefix} \
+    --with-jpeg=%{_prefix} \
     --with-kerberos \
     --with-layout=GNU \
     --with-libdir=%{_lib} \
     --with-mhash \
     --with-mysql-sock=%{mysql_sock} \
-%if %{with_libmysql}
-    --with-mysqli=%{mysql_config} \
-    --with-pdo-mysql=%{_prefix} \
-%else
     --with-mysqli=mysqlnd \
     --with-pdo-mysql=mysqlnd \
-%endif
-    --with-onig=%{_prefix} \
     --with-openssl \
-%if %{with_argon2}
-    --with-password-argon2 \
-%endif
+    --without-password-argon2 \
     --with-pdo-odbc=unixODBC,%{_prefix} \
     --with-pic \
-    --with-png-dir=%{_prefix} \
     --with-system-ciphers \
     --with-system-tzdata \
+    --with-webp \
     --with-xmlrpc \
+%if %{with_zip}
+    --with-zip \
+%endif
     --with-zlib \
     --without-pear \
-%if %{with_dtrace}
     --enable-dtrace \
-%endif
 %if %{with_sodium}
     --with-sodium=shared \
 %else
@@ -939,7 +897,6 @@ ln -sf ../configure
 %if %{with_xml}
     --enable-dom=shared \
     --enable-simplexml=shared \
-    --enable-wddx=shared \
     --enable-xmlreader=shared \
     --enable-xmlwriter=shared \
     --with-xsl=shared,%{_prefix} \
@@ -961,6 +918,9 @@ ln -sf ../configure
     --enable-sysvmsg=shared --enable-sysvshm=shared --enable-sysvsem=shared \
     --enable-shmop=shared \
     --enable-posix=shared \
+%endif
+%if %{with_ffi}
+    --with-ffi=shared \
 %endif
     $*
 if test $? != 0; then
@@ -989,7 +949,7 @@ without_shared="--disable-bcmath --disable-dom --disable-opcache \
       --disable-posix --disable-shmop \
       --disable-simplexml \
       --disable-sysvmsg --disable-sysvsem --disable-sysvshm \
-      --disable-wddx --disable-xmlreader --disable-xmlwriter --without-ldap \
+      --disable-xmlreader --disable-xmlwriter --without-ffi --without-ldap \
       --without-pdo-pgsql --without-pgsql \
       --without-sodium \
       --without-unixODBC --without-xsl"
@@ -1034,7 +994,7 @@ export NO_INTERACTION=1 REPORT_EXIT_STATUS=1 MALLOC_CHECK_=2
 export SKIP_ONLINE_TESTS=1
 export SKIP_IO_CAPTURE_TESTS=1
 unset TZ LANG LC_ALL
-if ! make test; then
+if ! make test TESTS=-j4; then
   set +x
   for f in $(find .. -name \*.diff -type f -print); do
     if ! grep -q XFAIL "${f/.diff/.phpt}"
@@ -1083,19 +1043,18 @@ make -C build-fpm install-fpm \
     INSTALL_ROOT=$RPM_BUILD_ROOT
 %endif
 
-# Install the default configuration file and icons
+# Install the default configuration file
 %if %{with_common}
 install -m 755 -d $RPM_BUILD_ROOT%{php_sysconfdir}/
 install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{php_sysconfdir}/php.ini
-%endif # if %{with_common}
 
-install -m 755 -d $RPM_BUILD_ROOT%{_httpd_contentdir}/icons
-install -m 644 *.gif $RPM_BUILD_ROOT%{_httpd_contentdir}/icons/php.gif
-
-%if %{with_common}
 # For third-party packaging:
 install -m 755 -d $RPM_BUILD_ROOT%{php_libdir}/pear \
+%if %{with_ffi}
+                  $RPM_BUILD_ROOT%{php_datadir}/preload
+%else
                   $RPM_BUILD_ROOT%{php_datadir}
+%endif
 %endif
 
 # install the DSO
@@ -1115,7 +1074,6 @@ install -D -m 644 httpd-php.conf $RPM_BUILD_ROOT%{_httpd_confdir}/02-php.conf
 # Dual config file with httpd >= 2.4 (fedora >= 18)
 install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_modconfdir}/15-php.conf
 
-
 %if %{with_common}
 install -m 755 -d $RPM_BUILD_ROOT%{php_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{php_sharedstatedir}
@@ -1130,7 +1088,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{php_sysconfdir}/php-cgi-fcgi.d
 
 %if %{with_cgi}
 # install ioncube
-install -D -m 755 ioncube/ioncube_loader_lin_7.3.so $RPM_BUILD_ROOT%{php_libdir}/modules/ioncube_loader_lin_7.3.so
+#install -D -m 755 ioncube/ioncube_loader_lin_7.4.so $RPM_BUILD_ROOT%{php_libdir}/modules/ioncube_loader_lin_7.4.so
 
 # install config
 sed "s,@LIBDIR@,%{_libdir},g" \
@@ -1184,6 +1142,15 @@ install -D -m 644 %{SOURCE12} $RPM_BUILD_ROOT%{_unitdir}/nginx.service.d/%{fpm_s
 %endif # if %{with_relocation}
 %endif # with_fpm
 
+TESTCMD="$RPM_BUILD_ROOT%{_bindir}/%{bin_cli} --no-php-ini"
+# Ensure all provided extensions are really there
+for mod in core date filter hash libxml openssl pcre reflection session spl standard zlib
+do
+     $TESTCMD --modules | grep -qi $mod
+done
+
+TESTCMD="$TESTCMD --define extension_dir=$RPM_BUILD_ROOT%{php_libdir}/modules"
+
 %if %{with_modules}
 # Generate files lists and stub .ini files for each subpackage
 for mod in \
@@ -1191,7 +1158,7 @@ for mod in \
     bcmath \
 %endif
 %if %{with_xml}
-    dom simplexml wddx xmlreader xmlwriter xsl \
+    dom simplexml xmlreader xmlwriter xsl \
 %endif
 %if %{with_opcache}
     opcache \
@@ -1211,18 +1178,27 @@ for mod in \
 %if %{with_sodium}
     sodium \
 %endif
+%if %{with_ffi}
+    ffi \
+%endif
     ; do
     case $mod in
       opcache)
         # Zend extensions
+        TESTCMD="$TESTCMD --define zend_extension=$mod"
         ini=10-${mod}.ini;;
-      xsl|dom|wddx|xmlreader|xmlwriter|simplexml)
+      xsl|dom|xmlreader|xmlwriter|simplexml)
         # Extensions with dependencies on 20-*
+        TESTCMD="$TESTCMD --define extension=$mod"
         ini=30-${mod}.ini;;
       *)
         # Extensions with no dependency
+        TESTCMD="$TESTCMD --define extension=$mod"
         ini=20-${mod}.ini;;
     esac
+
+    $TESTCMD --modules | grep -qi $mod
+
     # some extensions have their own config file
     if [ -f ${ini} ]; then
       install -D -m 644 ${ini} $RPM_BUILD_ROOT%{php_sysconfdir}/php.d/${ini}
@@ -1252,7 +1228,7 @@ done
 
 %if %{with_xml}
 # The dom, xsl and xml* modules are all packaged in php-xml
-cat files.dom files.xsl files.xml{reader,writer} files.wddx \
+cat files.dom files.xsl files.xml{reader,writer} \
     files.simplexml >> files.xml
 %endif
 
@@ -1293,6 +1269,7 @@ rm -rf $RPM_BUILD_ROOT%{php_libdir}/modules/*.a \
        $RPM_BUILD_ROOT%{_bindir}/{phptar} \
        $RPM_BUILD_ROOT%{_datadir}/pear \
        $RPM_BUILD_ROOT%{pear_datadir} \
+       $RPM_BUILD_ROOT%{_libdir}/libphp7.a \
        $RPM_BUILD_ROOT%{_libdir}/libphp7.la
 
 # Remove irrelevant docs
@@ -1321,13 +1298,12 @@ exit 0
 %{_httpd_moddir}/libphp7.so
 %config(noreplace) %{_httpd_confdir}/02-php.conf
 %config(noreplace) %{_httpd_modconfdir}/15-php.conf
-%{_httpd_contentdir}/icons/*.gif
 
 %if %{with_common}
 %files common
-%doc CODING_STANDARDS CREDITS EXTENSIONS NEWS README*
+%doc EXTENSIONS NEWS UPGRADING* README.REDIST.BINS *md docs
 %doc LICENSE TSRM_LICENSE libmagic_LICENSE timelib_LICENSE
-%doc libmbfl_LICENSE ucgendat_LICENSE
+%doc libmbfl_LICENSE
 %doc php.ini-*
 %config(noreplace) %{php_sysconfdir}/php.ini
 %dir %{php_sysconfdir}/php.d
@@ -1356,7 +1332,6 @@ exit 0
 %{_mandir}/man1/%{bin_phar}.1*
 %{_mandir}/man1/phar.%{bin_phar}.1*
 %{_mandir}/man1/%{bin_phpize}.1*
-%doc sapi/cli/README
 # move php-config here in case if devel package disabled
 %if ! %{with_devel}
 %exclude %{_bindir}/%{bin_php_config}
@@ -1369,10 +1344,9 @@ exit 0
 %{_bindir}/%{bin_cgi}
 %config(noreplace) %{php_sysconfdir}/php-cgi-fcgi.ini
 %{_mandir}/man1/%{bin_cgi}.1*
-%doc sapi/cgi/README*
 
-%files ioncube
-%attr(755,root,root) %{php_libdir}/modules/ioncube_loader_lin_7.3.so
+#%files ioncube
+#%attr(755,root,root) %{php_libdir}/modules/ioncube_loader_lin_7.4.so
 %endif
 
 %if %{with_fpm}
@@ -1416,7 +1390,7 @@ exit 0
 
 %if %{with_bcmath}
 %files bcmath -f files.bcmath
-%doc libbcmath_COPYING
+%doc libbcmath_LICENSE
 %endif
 
 %if %{with_opcache}
@@ -1444,12 +1418,40 @@ exit 0
 %files sodium -f files.sodium
 %endif
 
-%changelog
-* Tue Nov 19 2019 Remi Collet <remi@remirepo.net> - 7.3.12-1
-- Update to 7.3.12 - http://www.php.net/releases/7_3_12.php
+%if %{with_ffi}
+%files ffi -f files.ffi
+%dir %{php_datadir}/preload
+%endif
 
-* Tue Oct 22 2019 Remi Collet <remi@remirepo.net> - 7.3.11-1
-- Update to 7.3.11 - http://www.php.net/releases/7_3_11.php
+%changelog
+* Wed Nov 27 2019 Remi Collet <remi@remirepo.net> - 7.4.0-1
+- update to 7.4.0 GA
+
+* Fri Nov 01 2019 Pete Walter <pwalter@fedoraproject.org> - 7.4.0~RC5-2
+- Rebuild for ICU 65
+
+* Tue Oct 29 2019 Remi Collet <remi@remirepo.net> - 7.4.0~RC5-1
+- update to 7.4.0RC5
+- set opcache.enable_cli in provided default configuration
+- add /usr/share/php/preload as default ffi.preload configuration
+
+* Tue Oct 15 2019 Remi Collet <remi@remirepo.net> - 7.4.0~RC4-1
+- update to 7.4.0RC4
+
+* Mon Oct  7 2019 Remi Collet <remi@remirepo.net> - 7.4.0~RC3-2
+- ensure all shared extensions can be loaded
+- add patch from https://github.com/php/php-src/pull/4794
+  to ensure opcache is always linked with librt
+
+* Tue Oct  1 2019 Remi Collet <remi@remirepo.net> - 7.4.0~RC3-1
+- update to 7.4.0RC3
+- bump API version to 20190902
+- drop wddx, recode and interbase extensions
+- add ffi extension
+- drop dependency on libargon2, use libsodium implementation
+- run test suite using 4 concurrent workers
+- cleanup unused conditional
+- add upstream patch to fix aarch64 build
 
 * Wed Aug 28 2019 Remi Collet <remi@remirepo.net> - 7.3.9-1
 - Update to 7.3.9 - http://www.php.net/releases/7_3_9.php

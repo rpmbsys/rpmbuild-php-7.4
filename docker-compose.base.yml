@@ -1,12 +1,12 @@
 version: "3.5"
 services:
-  centos7php73base:
+  centos7php74base:
     build:
       context: .
       dockerfile: Dockerfile.base
-    image: aursu/php73build:7-base
-  centos8php73base:
+    image: aursu/php74build:7-base
+  centos8php74base:
     build:
       context: .
       dockerfile: Dockerfile.8-base
-    image: aursu/php73build:8-base
+    image: aursu/php74build:8-base

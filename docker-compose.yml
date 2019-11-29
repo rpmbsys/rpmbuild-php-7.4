@@ -1,12 +1,12 @@
 version: "3.5"
 services:
-  centos7php73:
+  centos7php74:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
-  centos7php73rel:
+  centos7php74rel:
     command: ["-ba", "--with", "relocation"]
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
