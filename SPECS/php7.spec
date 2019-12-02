@@ -135,7 +135,7 @@
 
 %global with_zip    1
 
-%global rpmrel 1
+%global rpmrel 2
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -187,6 +187,7 @@ Source112: php7-php-fpm.wants
 Source113: php7-nginx-fpm.conf
 Source114: php7-nginx-php.conf
 Source150: php7-10-opcache.ini
+Source153: php7-20-ffi.ini
 
 # Build fixes
 Patch1: php-7.4.0-httpd.patch
@@ -782,20 +783,27 @@ rm -f TSRM/tsrm_win32.h \
 find . -name \*.[ch] -exec chmod 644 {} \;
 chmod 644 README.*
 
-%if %{with_opcache}
 # Some extensions have their own configuration file
+%if %{with_opcache}
 %if %{with_relocation}
 cat %{SOURCE150} > 10-opcache.ini
 %else
 cat %{SOURCE50} > 10-opcache.ini
 %endif
-cp %{SOURCE51} %{SOURCE53} .
 
 # according to https://forum.remirepo.net/viewtopic.php?pid=8407#p8407
 %ifarch x86_64
 sed -e '/opcache.huge_code_pages/s/0/1/' -i 10-opcache.ini
 %endif # ifarch x86_64
 %endif # if %{with_opcache}
+
+%if %{with_ffi}
+%if %{with_relocation}
+cat %{SOURCE153} > 20-ffi.ini
+%else
+cat %{SOURCE53} > 20-ffi.ini
+%endif
+%endif # if %{with_ffi}
 
 %build
 # Set build date from https://reproducible-builds.org/specs/source-date-epoch/
@@ -1424,6 +1432,9 @@ exit 0
 %endif
 
 %changelog
+* Mon Dec  2 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.4.0-2
+- corrected relocated build's configuration files
+
 * Wed Nov 27 2019 Remi Collet <remi@remirepo.net> - 7.4.0-1
 - update to 7.4.0 GA
 
