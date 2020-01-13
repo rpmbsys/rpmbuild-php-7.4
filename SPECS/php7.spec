@@ -135,12 +135,12 @@
 
 %global with_zip    1
 
-%global rpmrel 2
+%global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.4.0
+Version: 7.4.1
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -1432,6 +1432,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Dec 18 2019 Remi Collet <remi@remirepo.net> - 7.4.1-1
+- Update to 7.4.1 - http://www.php.net/releases/7_4_1.php
+
 * Mon Dec  2 2019 Alexander Ursu <alexander.ursu@gmail.com> - 7.4.0-2
 - corrected relocated build's configuration files
 
