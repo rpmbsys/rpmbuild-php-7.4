@@ -1,135 +1,88 @@
-version: 2
-jobs:
-  build:
-    machine:
-      image: ubuntu-1604:201903-01
-    environment:
-      BINTRAY_REPO: php74custom
-      PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-7.4
-    steps:
-      - checkout
-      - run:
-          name: Git submodules sync
-          command: |
-            git submodule sync
-            git submodule update --init
-      - run:
-          name: Pull images for RPM build docker services
-          command: |
-            docker-compose -f rpmbuild/docker-compose.yml pull
-            docker-compose -f rpmbuild/docker-compose.bintray.yml pull
-            docker-compose -f rpmbuild/docker-compose.refresh.yml pull
-      - run:
-          name: Start docker services for rpmbuild
-          command: docker-compose -f rpmbuild/docker-compose.yml up -d
-          background: true
-          no_output_timeout: 2h
-      - run:
-          name: Build PHP Docker images
-          command: |
-            docker-compose -f docker-compose.base.yml build --no-cache --pull centos7php74base
-            docker-compose build --no-cache
-      - run:
-          name: Build PHP 7.4 RPM packages
-          command: docker-compose up
-      - run:
-          name: Upload RPM packages into Bintray
-          command: |
-            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
-              -e BINTRAY_USER=$BINTRAY_USER \
-              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
-              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos7bintray
-      - run:
-          name: refresh repositories
-          command: docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos7refresh
-      - run:
-          name: Build PHP Docker images (PHP 7.4)
-          command: docker-compose -f build/docker-compose.yml build --no-cache --pull
-      - run:
-          name: Upload PHP Docker images (PHP 7.4)
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push aursu/php74build:7-build
-            docker push aursu/php74build:7-build-rel
-      - run:
-          name: Build PHP Docker runtime images (PHP 7.4)
-          command: |
-            docker-compose -f run/docker-compose.yml build --no-cache --pull
-            docker-compose -f run/docker-compose.dev.yml build --no-cache centos7php74dev
-      - run:
-          name: Upload PHP Docker runtime images (PHP 7.4)
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push aursu/php74build:7-runtime
-            docker push aursu/php74build:7-dev
-  build8:
-    machine:
-      image: ubuntu-1604:201903-01
-    environment:
-      BINTRAY_REPO: php74custom
-      PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-php-7.4
-    steps:
-      - checkout
-      - run:
-          name: Git submodules sync
-          command: |
-            git submodule sync
-            git submodule update --init
-      - run:
-          name: Pull images for RPM build docker services
-          command: |
-            docker-compose -f rpmbuild/docker-compose.yml pull
-            docker-compose -f rpmbuild/docker-compose.bintray.yml pull
-            docker-compose -f rpmbuild/docker-compose.refresh.yml pull
-      - run:
-          name: Start docker services for rpmbuild
-          command: docker-compose -f rpmbuild/docker-compose.yml up -d
-          background: true
-          no_output_timeout: 2h
-      - run:
-          name: Build PHP Docker images
-          command: |
-            docker-compose -f docker-compose.base.yml build --no-cache --pull centos8php74base
-            docker-compose -f docker-compose.el8.yml build --no-cache
-      - run:
-          name: Build PHP 7.4 RPM packages
-          command: docker-compose -f docker-compose.el8.yml up
-      - run:
-          name: Upload RPM packages into Bintray
-          command: |
-            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
-              -e BINTRAY_USER=$BINTRAY_USER \
-              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
-              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos8bintray
-      - run:
-          name: refresh repositories
-          command: docker-compose -f rpmbuild/docker-compose.refresh.yml run --rm centos8refresh
-      - run:
-          name: Build PHP Docker images (PHP 7.4)
-          command: docker-compose -f build/docker-compose.el8.yml build --no-cache --pull
-      - run:
-          name: Upload PHP Docker images (PHP 7.4)
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push aursu/php74build:8-build
-            docker push aursu/php74build:8-build-rel
-      - run:
-          name: Build PHP Docker runtime images (PHP 7.4)
-          command: |
-            docker-compose -f run/docker-compose.el8.yml build --no-cache --pull
-            docker-compose -f run/docker-compose.dev.yml build --no-cache centos8php74dev
-      - run:
-          name: Upload PHP Docker runtime images (PHP 7.4)
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push aursu/php74build:8-runtime
-            docker push aursu/php74build:8-dev
+version: 2.1
+
+orbs:
+  docker-rpmbuild: aursu/rpmbuild@1.0.0
 
 workflows:
-  version: 2
-  php74build:
+  php73build:
     jobs:
-      - build
-      - build8
+      - docker-rpmbuild/rpmbuild:
+          name: centos7php74
+          base_service: centos7php74base
+          build_service: centos7php74
+          bintray_uploader: centos7bintray
+      - docker-rpmbuild/rpmbuild:
+          name: centos7php74rel
+          base_service: centos7php74base
+          build_service: centos7php74rel
+          bintray_uploader: centos7bintray
+      - docker-rpmbuild/rpmbuild:
+          name: centos8php74
+          base_service: centos8php74base
+          build_file: docker-compose.el8.yml
+          build_service: centos8php74
+          bintray_uploader: centos8bintray
+      - docker-rpmbuild/rpmbuild:
+          name: centos8php74rel
+          base_service: centos8php74base
+          build_file: docker-compose.el8.yml
+          build_service: centos8php74rel
+          bintray_uploader: centos8bintray
+      - docker-rpmbuild/image:
+          name: centos7php74build
+          build_service: centos7php74build
+          requires:
+            - centos7php74
+      - docker-rpmbuild/image:
+          name: centos7php74buildrel
+          build_service: centos7php74buildrel
+          requires:
+            - centos7php74rel
+      - docker-rpmbuild/image:
+          name: centos8php74build
+          compose_file: build/docker-compose.el8.yml
+          build_service: centos8php74build
+          requires:
+            - centos8php74
+      - docker-rpmbuild/image:
+          name: centos8php74buildrel
+          compose_file: build/docker-compose.el8.yml
+          build_service: centos8php74buildrel
+          requires:
+            - centos8php74rel
+      - docker-rpmbuild/image:
+          name: centos7php74run
+          compose_file: run/docker-compose.yml
+          build_service: centos7php74run
+          requires:
+            - centos7php73
+      - docker-rpmbuild/image:
+          name: centos7php74devbase
+          compose_file: run/docker-compose.yml
+          build_service: centos7php74devbase
+          requires:
+            - centos7php74
+      - docker-rpmbuild/image:
+          name: centos8php74run
+          compose_file: run/docker-compose.el8.yml
+          build_service: centos8php74run
+          requires:
+            - centos8php74
+      - docker-rpmbuild/image:
+          name: centos8php74devbase
+          compose_file: run/docker-compose.el8.yml
+          build_service: centos8php74devbase
+          requires:
+            - centos8php74
+      - docker-rpmbuild/image:
+          name: centos7php74dev
+          compose_file: run/docker-compose.dev.yml
+          build_service: centos7php74dev
+          requires:
+            - centos7php74devbase
+      - docker-rpmbuild/image:
+          name: centos8php74dev
+          compose_file: run/docker-compose.dev.yml
+          build_service: centos8php74dev
+          requires:
+            - centos8php74devbase

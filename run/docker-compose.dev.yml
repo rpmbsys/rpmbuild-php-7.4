@@ -3,10 +3,12 @@ services:
   centos7php74dev:
     build:
       context: dev
-    image: aursu/php74build:7-dev
+      args:
+        centos: $OS7
+    image: "aursu/php74build:${OS7TAG}-dev"
   centos8php74dev:
     build:
       context: dev
       args:
-        image: 8-devbase
-    image: aursu/php74build:8-dev
+        centos: $OS8
+    image: "aursu/php74build:${OS8TAG}-dev"

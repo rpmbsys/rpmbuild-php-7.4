@@ -1,4 +1,4 @@
-ARG centos=7
+ARG centos=7.7.1908
 FROM aursu/rpmbuild:${centos}-build
 
 USER root

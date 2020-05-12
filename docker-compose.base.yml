@@ -4,9 +4,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.base
-    image: aursu/php74build:7-base
+      args:
+        centos: $OS7
+    image: "aursu/php74build:${OS7}-base"
   centos8php74base:
     build:
       context: .
       dockerfile: Dockerfile.8-base
-    image: aursu/php74build:8-base
+      args:
+        centos: $OS8
+    image: "aursu/php74build:${OS8}-base"
