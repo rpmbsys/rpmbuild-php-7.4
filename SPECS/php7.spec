@@ -140,7 +140,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.4.1
+Version: 7.4.6
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -235,7 +235,6 @@ BuildRequires: libstdc++-devel
 BuildRequires: libtool >= 1.4.3
 BuildRequires: libtool-ltdl-devel
 BuildRequires: libwebp-devel
-BuildRequires: libzip-devel >= 0.11
 %if %{with_fpm}
 # to ensure we are using nginx with filesystem feature (see #1142298)
 BuildRequires: nginx-filesystem
@@ -1432,6 +1431,9 @@ exit 0
 %endif
 
 %changelog
+* Tue May 12 2020 Remi Collet <remi@remirepo.net> - 7.4.6-1
+- Update to 7.4.6 - http://www.php.net/releases/7_4_6.php
+
 * Wed Dec 18 2019 Remi Collet <remi@remirepo.net> - 7.4.1-1
 - Update to 7.4.1 - http://www.php.net/releases/7_4_1.php
 
