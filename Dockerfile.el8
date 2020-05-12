@@ -1,5 +1,5 @@
 ARG centos=8.1.1911
-FROM aursu/php73build:${centos}-base
+FROM aursu/php74build:${centos}-base
 
 COPY SOURCES ${BUILD_TOPDIR}/SOURCES
 COPY SPECS ${BUILD_TOPDIR}/SPECS
