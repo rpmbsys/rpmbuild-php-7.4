@@ -4,7 +4,7 @@ orbs:
   docker-rpmbuild: aursu/rpmbuild@1.0.0
 
 workflows:
-  php73build:
+  php74build:
     jobs:
       - docker-rpmbuild/rpmbuild:
           name: centos7php74
@@ -55,7 +55,7 @@ workflows:
           compose_file: run/docker-compose.yml
           build_service: centos7php74run
           requires:
-            - centos7php73
+            - centos7php74
       - docker-rpmbuild/image:
           name: centos7php74devbase
           compose_file: run/docker-compose.yml
