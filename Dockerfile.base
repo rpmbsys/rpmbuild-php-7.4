@@ -16,6 +16,7 @@ RUN yum -y install \
         libjpeg-turbo-devel \
         libpng-devel \
         libsodium-devel \
+        libtidy-devel \
         libtool-ltdl-devel \
         libwebp-devel \
         libxml2-devel \

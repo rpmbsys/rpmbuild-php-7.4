@@ -21,6 +21,7 @@
 %global with_posix 0%{!?_without_posix:1}
 %global with_sodium 0%{!?_without_sodium:1}
 %global with_ffi 0%{!?_without_ffi:1}
+%global with_tidy 0%{!?_without_tidy:1}
 %global with_devel 0%{!?_without_devel:1}
 %global with_common 0%{!?_without_common:1}
 
@@ -135,7 +136,7 @@
 
 %global with_zip    1
 
-%global rpmrel 1
+%global rpmrel 2
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -670,6 +671,20 @@ For PHP, FFI opens a way to write PHP extensions and bindings to C libraries
 in pure PHP.
 %endif
 
+%if %{with_tidy}
+%package tidy
+Summary: Standard PHP module provides tidy library support
+# All files licensed under PHP version 3.01
+License: PHP
+BuildRequires: libtidy-devel
+Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
+%global with_modules 1
+
+%description tidy
+The php-tidy package contains a dynamic shared object that will add
+support for using the tidy library to PHP.
+%endif
+
 %prep
 %setup -q -n php-%{version}
 
@@ -929,6 +944,9 @@ ln -sf ../configure
 %if %{with_ffi}
     --with-ffi=shared \
 %endif
+%if %{with_tidy}
+    --with-tidy=shared,%{_prefix} \
+%endif
     $*
 if test $? != 0; then
   tail -500 config.log
@@ -958,7 +976,7 @@ without_shared="--disable-bcmath --disable-dom --disable-opcache \
       --disable-sysvmsg --disable-sysvsem --disable-sysvshm \
       --disable-xmlreader --disable-xmlwriter --without-ffi --without-ldap \
       --without-pdo-pgsql --without-pgsql \
-      --without-sodium \
+      --without-sodium --without-tidy \
       --without-unixODBC --without-xsl"
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1187,6 +1205,9 @@ for mod in \
 %endif
 %if %{with_ffi}
     ffi \
+%endif
+%if %{with_tidy}
+    tidy \
 %endif
     ; do
     case $mod in
@@ -1430,7 +1451,14 @@ exit 0
 %dir %{php_datadir}/preload
 %endif
 
+%if %{with_tidy}
+%files tidy -f files.tidy
+%endif
+
 %changelog
+* Mon May 18 2020 Alexander Ursu <alexander.ursu@gmail.com> - 7.4.6-2
+- enable tidy extension (shared)
+
 * Tue May 12 2020 Remi Collet <remi@remirepo.net> - 7.4.6-1
 - Update to 7.4.6 - http://www.php.net/releases/7_4_6.php
 
