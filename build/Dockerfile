@@ -5,7 +5,6 @@ USER root
 
 RUN yum -y install \
         libc-client \
-        pcre2-devel \
     && yum clean all && rm -rf /var/cache/yum /var/cache/dnf /var/lib/rpm/__db*
 
 COPY system/etc/yum.repos.d/bintray-custom.repo /etc/yum.repos.d/bintray-custom.repo
