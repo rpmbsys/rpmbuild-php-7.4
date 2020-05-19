@@ -5,7 +5,7 @@ services:
       context: .
       args:
         centos: $OS8
-    image: "aursu/php73build:${OS8TAG}-build"
+    image: "aursu/php74build:${OS8TAG}-build"
   centos8php74buildrel:
     build:
       context: .
