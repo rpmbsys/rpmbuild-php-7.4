@@ -136,7 +136,7 @@
 
 %global with_zip    1
 
-%global rpmrel 2
+%global rpmrel 3
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -420,9 +420,11 @@ Group: Development/Languages
 Summary: Command-line interface for PHP
 # sapi/cli/ps_title.c is PostgreSQL
 License: PHP and Zend and BSD and MIT and ASL 1.0 and NCSA and PostgreSQL
-# No interactive mode for CLI/CGI (disabled libedit, readline)
+BuildRequires: pkgconfig(libedit)
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 Provides: %{php_cli}%{?_isa} = %{version}-%{baserel}
+Provides: php-pcntl, php-pcntl%{?_isa}
+Provides: php-readline, php-readline%{?_isa}
 
 %description cli
 The php-cli package contains the command-line interface
@@ -732,6 +734,9 @@ cp ext/date/lib/LICENSE.rst timelib_LICENSE
 
 # Multiple builds for multiple SAPIs
 mkdir build-apache
+%if %{with_cli}
+mkdir build-cli
+%endif
 %if %{with_cgi}
 mkdir build-cgi
 %endif
@@ -947,6 +952,7 @@ ln -sf ../configure
 %if %{with_tidy}
     --with-tidy=shared,%{_prefix} \
 %endif
+    --without-readline \
     $*
 if test $? != 0; then
   tail -500 config.log
@@ -966,6 +972,7 @@ build \
       --program-suffix=%{program_suffix} \
 %endif
       --disable-cli \
+      --without-libedit \
       --with-config-file-scan-dir=%{php_sysconfdir}/php-cgi-fcgi.d
 popd
 %endif
@@ -988,11 +995,23 @@ build --with-apxs2=%{_httpd_apxs} --disable-cgi \
 %if %{with_cgi}
     ${without_shared} \
 %endif
-%if ! %{with_cli}
     --disable-cli \
-%endif
     --with-config-file-scan-dir=%{php_sysconfdir}/php.d
 popd
+
+%if %{with_cli}
+# Build CLI SAPI, /usr/bin/php
+pushd build-cli
+build --disable-cgi \
+    --enable-pcntl \
+    --with-libedit \
+%if %{with_relocation}
+    --program-suffix=%{program_suffix} \
+%endif
+    ${without_shared} \
+    --with-config-file-scan-dir=%{php_sysconfdir}/php.d
+popd
+%endif
 
 # Build php-fpm
 %if %{with_fpm}
@@ -1050,17 +1069,18 @@ make -C build-apache install-modules INSTALL_ROOT=$RPM_BUILD_ROOT
 %endif # if %{with_cgi}
 
 # all except install-sapi - use apxs for rpmbuild is failed (httpd.conf is missed)
-make -C build-apache  install-binaries \
+make -C build-apache install-binaries \
+    INSTALL_ROOT=$RPM_BUILD_ROOT
+
+%if %{with_cli}
+make -C build-cli install-cli \
 %if %{with_devel}
     install-build install-headers install-pdo-headers \
 %endif
-%if %{with_cli}
     install-pharcmd \
-%endif
-%if %{with_devel} || %{with_cli}
     install-programs \
-%endif
     INSTALL_ROOT=$RPM_BUILD_ROOT
+%endif
 
 # Install the php-fpm binary
 %if %{with_fpm}
@@ -1456,6 +1476,9 @@ exit 0
 %endif
 
 %changelog
+* Sun May 24 2020 Alexander Ursu <alexander.ursu@gmail.com> - 7.4.6-3
+- separate CLI build from apache2handler. Enable pcntl for CLI
+
 * Mon May 18 2020 Alexander Ursu <alexander.ursu@gmail.com> - 7.4.6-2
 - enable tidy extension (shared)
 
