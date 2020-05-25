@@ -22,6 +22,7 @@
 %global with_sodium 0%{!?_without_sodium:1}
 %global with_ffi 0%{!?_without_ffi:1}
 %global with_tidy 0%{!?_without_tidy:1}
+%global with_sockets 0%{!?_without_sockets:1}
 %global with_devel 0%{!?_without_devel:1}
 %global with_common 0%{!?_without_common:1}
 
@@ -136,7 +137,7 @@
 
 %global with_zip    1
 
-%global rpmrel 3
+%global rpmrel 4
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -687,6 +688,20 @@ The php-tidy package contains a dynamic shared object that will add
 support for using the tidy library to PHP.
 %endif
 
+%if %{with_sockets}
+%package sockets
+Summary: Standard PHP module provides BSD sockets support
+# All files licensed under PHP version 3.01
+License: PHP
+Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
+%global with_modules 1
+
+%description sockets
+The socket extension implements a low-level interface to the socket
+communication functions based on the popular BSD sockets, providing the
+possibility to act as a socket server as well as a client.
+%endif
+
 %prep
 %setup -q -n php-%{version}
 
@@ -952,6 +967,9 @@ ln -sf ../configure
 %if %{with_tidy}
     --with-tidy=shared,%{_prefix} \
 %endif
+%if %{with_sockets}
+    --enable-sockets=shared \
+%endif
     --without-readline \
     $*
 if test $? != 0; then
@@ -983,7 +1001,7 @@ without_shared="--disable-bcmath --disable-dom --disable-opcache \
       --disable-sysvmsg --disable-sysvsem --disable-sysvshm \
       --disable-xmlreader --disable-xmlwriter --without-ffi --without-ldap \
       --without-pdo-pgsql --without-pgsql \
-      --without-sodium --without-tidy \
+      --without-sodium --without-tidy --disable-sockets \
       --without-unixODBC --without-xsl"
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1228,6 +1246,9 @@ for mod in \
 %endif
 %if %{with_tidy}
     tidy \
+%endif
+%if %{with_sockets}
+    sockets \
 %endif
     ; do
     case $mod in
@@ -1475,7 +1496,14 @@ exit 0
 %files tidy -f files.tidy
 %endif
 
+%if %{with_sockets}
+%files sockets -f files.sockets
+%endif
+
 %changelog
+* Mon May 25 2020 Alexander Ursu <alexander.ursu@gmail.com> - 7.4.6-4
+- Added sockets extension as separate package
+
 * Sun May 24 2020 Alexander Ursu <alexander.ursu@gmail.com> - 7.4.6-3
 - separate CLI build from apache2handler. Enable pcntl for CLI
 
