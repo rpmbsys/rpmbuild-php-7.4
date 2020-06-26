@@ -137,12 +137,12 @@
 
 %global with_zip    1
 
-%global rpmrel 4
+%global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.4.6
+Version: 7.4.7
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -1501,6 +1501,9 @@ exit 0
 %endif
 
 %changelog
+* Tue Jun  9 2020 Remi Collet <remi@remirepo.net> - 7.4.7-1
+- Update to 7.4.7 - http://www.php.net/releases/7_4_7.php
+
 * Mon May 25 2020 Alexander Ursu <alexander.ursu@gmail.com> - 7.4.6-4
 - Added sockets extension as separate package
 
