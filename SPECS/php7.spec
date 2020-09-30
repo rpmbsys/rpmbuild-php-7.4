@@ -1398,13 +1398,13 @@ exit 0
 %if %{with_cli}
 %files cli
 %{_bindir}/%{bin_cli}
-%{_bindir}/phar.%{bin_phar}
+%{_bindir}/%{bin_phar}.phar
 %{_bindir}/%{bin_phar}
 # provides phpize here (not in -devel) for pecl command
 %{_bindir}/%{bin_phpize}
 %{_mandir}/man1/%{bin_cli}.1*
 %{_mandir}/man1/%{bin_phar}.1*
-%{_mandir}/man1/phar.%{bin_phar}.1*
+%{_mandir}/man1/%{bin_phar}.phar.1*
 %{_mandir}/man1/%{bin_phpize}.1*
 # move php-config here in case if devel package disabled
 %if ! %{with_devel}
