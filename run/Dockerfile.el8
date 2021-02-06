@@ -15,7 +15,7 @@ RUN dnf -y install libzip \
         php-pecl-geoip \
         php-pecl-imagick \
         php-pecl-memcached \
-        php-pecl-redis4 \
+        php-pecl-redis5 \
         php-sodium \
         php-xml \
     && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*

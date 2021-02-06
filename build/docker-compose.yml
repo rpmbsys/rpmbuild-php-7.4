@@ -5,11 +5,11 @@ services:
       context: .
       args:
         centos: $OS7
-    image: "aursu/php74build:${OS7TAG}-build"
+    image: aursu/php74build:${OS7TAG}-build
   centos7php74buildrel:
     build:
       context: .
       dockerfile: Dockerfile.rel
       args:
         centos: $OS7
-    image: "aursu/php74build:${OS7TAG}-build-rel"
+    image: aursu/php74build:${OS7TAG}-build-rel

@@ -17,7 +17,7 @@ RUN yum -y --enablerepo=bintray-custom --enablerepo=bintray-php74custom --skip-b
         php-pecl-geoip \
         php-pecl-imagick \
         php-pecl-memcached \
-        php-pecl-redis4 \
+        php-pecl-redis5 \
         php-sodium \
         php-xml \
     && yum clean all && rm -rf /var/cache/yum /var/lib/rpm/__db*
