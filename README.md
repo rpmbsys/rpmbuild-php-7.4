@@ -9,7 +9,6 @@ Sections `Prerequisites` and `Setup` should be done only once per build host
 
 ### PHP 7.4 Requirements
 
-1. Complete build of libzip on CentOS 7 (https://github.com/aursu/rpmbuild-libzip)
 
 ### Prerequisites
 
@@ -39,9 +38,6 @@ Sections `Prerequisites` and `Setup` should be done only once per build host
     systemctl enable docker
     systemctl start docker
     ```
-
-5. Port 80 on build host should be free (stop nginx/httpd or move to different
-port)
 
 ### Setup
 
@@ -82,7 +78,7 @@ to run any of them or run in foreground etc
 
 ### Access RPM packages
 
-1. RPM packages located inside `rpm6`, `rpm7` and `rpm8` volumes
+1. RPM packages located inside `rpm7` and `rpm8` volumes
 
 ### Cleanup build
 
