@@ -142,7 +142,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.4.15
+Version: 7.4.19
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -208,7 +208,6 @@ Patch47: php-7.4.8-phpinfo.patch
 Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
-Patch100: php-bug80682.patch
 
 # Security fixes (200+)
 
@@ -733,7 +732,6 @@ possibility to act as a socket server as well as a client.
 %patch49 -p1
 
 # upstream patches
-%patch100 -p1 -b .bug80682
 
 # security patches
 
@@ -1510,6 +1508,9 @@ exit 0
 %endif
 
 %changelog
+* Tue May  4 2021 Remi Collet <remi@remirepo.net> - 7.4.19-1
+- Update to 7.4.19 - http://www.php.net/releases/7_4_19.php
+
 * Tue Feb  2 2021 Remi Collet <remi@remirepo.net> - 7.4.15-1
 - Update to 7.4.15 - http://www.php.net/releases/7_4_15.php
 - add upstream patch for https://bugs.php.net/80682
