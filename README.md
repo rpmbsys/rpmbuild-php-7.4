@@ -48,20 +48,13 @@ Sections `Prerequisites` and `Setup` should be done only once per build host
     cd rpmbuild-php-7.4
     ```
 
-2. Setup build environment:
-
-    2.1. Setup rpmbuild base images
-
-    ```
-    docker-compose -f rpmbuild/docker-compose.yml pull
-    ```
-
 ### Build process
 
 
 1. Build images
 
     ```
+    docker-compose -f docker-compose.base.yml build
     docker-compose build
     ```
 
