@@ -15,3 +15,11 @@ services:
         image: nodedev
         centos: $OS8
     image: "aursu/php74build:${OS8TAG}-devbase"
+  centos8php74dev2base:
+    build:
+      context: .
+      dockerfile: Dockerfile.el8
+      args:
+        image: node16dev
+        centos: $OS8
+    image: "aursu/php74build:${OS8TAG}-dev2base"
