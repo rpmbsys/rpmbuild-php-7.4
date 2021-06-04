@@ -6,10 +6,3 @@ services:
       args:
         centos: $OS8
     image: aursu/php74build:${OS8TAG}-build
-  centos8php74buildrel:
-    build:
-      context: .
-      dockerfile: Dockerfile.rel
-      args:
-        centos: $OS8
-    image: aursu/php74build:${OS8TAG}-build-rel
