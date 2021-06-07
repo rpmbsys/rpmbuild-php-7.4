@@ -9,16 +9,6 @@ services:
       dockerfile: Dockerfile.el8
       args:
         centos: $OS8
-  centos8php74rel:
-    command: ["-ba", "--with", "relocation"]
-    volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm8:/home/centos/rpmbuild/RPMS
-    build:
-      context: .
-      dockerfile: Dockerfile.el8
-      args:
-        centos: $OS8
 
 volumes:
   rpms:

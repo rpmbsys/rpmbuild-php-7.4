@@ -12,21 +12,10 @@ workflows:
           build_service: centos7php74
           bintray_uploader: centos7bintray
       - docker-rpmbuild/rpmbuild:
-          name: centos7php74rel
-          base_service: centos7php74base
-          build_service: centos7php74rel
-          bintray_uploader: centos7bintray
-      - docker-rpmbuild/rpmbuild:
           name: centos8php74
           base_service: centos8php74base
           build_file: docker-compose.el8.yml
           build_service: centos8php74
-          bintray_uploader: centos8bintray
-      - docker-rpmbuild/rpmbuild:
-          name: centos8php74rel
-          base_service: centos8php74base
-          build_file: docker-compose.el8.yml
-          build_service: centos8php74rel
           bintray_uploader: centos8bintray
       - docker-rpmbuild/image:
           name: centos7php74build
@@ -34,22 +23,11 @@ workflows:
           requires:
             - centos7php74
       - docker-rpmbuild/image:
-          name: centos7php74buildrel
-          build_service: centos7php74buildrel
-          requires:
-            - centos7php74rel
-      - docker-rpmbuild/image:
           name: centos8php74build
           compose_file: build/docker-compose.el8.yml
           build_service: centos8php74build
           requires:
             - centos8php74
-      - docker-rpmbuild/image:
-          name: centos8php74buildrel
-          compose_file: build/docker-compose.el8.yml
-          build_service: centos8php74buildrel
-          requires:
-            - centos8php74rel
       - docker-rpmbuild/image:
           name: centos7php74run
           compose_file: run/docker-compose.yml

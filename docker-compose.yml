@@ -8,15 +8,6 @@ services:
       context: .
       args:
         centos: $OS7
-  centos7php74rel:
-    command: ["-ba", "--with", "relocation"]
-    volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm7:/home/centos/rpmbuild/RPMS
-    build:
-      context: .
-      args:
-        centos: $OS7
 
 volumes:
   rpms:

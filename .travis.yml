@@ -18,9 +18,7 @@ env:
     - OS8TAG=8.3.2011
   jobs:
     - BUILD_COMPOSE_FILE=docker-compose.yml       BASE=centos7php74base BUILD=centos7php74    UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.yml       BASE=centos7php74base BUILD=centos7php74rel UPLOADER=centos7bintray
     - BUILD_COMPOSE_FILE=docker-compose.el8.yml   BASE=centos8php74base BUILD=centos8php74    UPLOADER=centos8bintray
-    - BUILD_COMPOSE_FILE=docker-compose.el8.yml   BASE=centos8php74base BUILD=centos8php74rel UPLOADER=centos8bintray
 
 install:
   - docker-compose -f docker-compose.base.yml build --no-cache --pull ${BASE}
