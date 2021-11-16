@@ -142,7 +142,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.4.20
+Version: 7.4.25
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -739,7 +739,7 @@ possibility to act as a socket server as well as a client.
 %patch300 -p1
 
 # Prevent %%doc confusion over LICENSE files
-cp Zend/LICENSE Zend/ZEND_LICENSE
+cp Zend/LICENSE ZEND_LICENSE
 cp TSRM/LICENSE TSRM_LICENSE
 cp sapi/fpm/LICENSE fpm_LICENSE
 cp ext/mbstring/libmbfl/LICENSE libmbfl_LICENSE
@@ -1378,7 +1378,7 @@ exit 0
 %if %{with_common}
 %files common
 %doc EXTENSIONS NEWS UPGRADING* README.REDIST.BINS *md docs
-%doc LICENSE TSRM_LICENSE libmagic_LICENSE timelib_LICENSE
+%doc LICENSE TSRM_LICENSE ZEND_LICENSE libmagic_LICENSE timelib_LICENSE
 %doc libmbfl_LICENSE
 %doc php.ini-*
 %config(noreplace) %{php_sysconfdir}/php.ini
@@ -1508,6 +1508,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Oct 20 2021 Remi Collet <remi@remirepo.net> - 7.4.25-1
+- Update to 7.4.25 - http://www.php.net/releases/7_4_24.php
+
 * Wed Jun  2 2021 Remi Collet <remi@remirepo.net> - 7.4.20-1
 - Update to 7.4.20 - http://www.php.net/releases/7_4_20.php
 
