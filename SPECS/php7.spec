@@ -142,7 +142,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.4.25
+Version: 7.4.26
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -443,15 +443,15 @@ Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 The php-cgi package contains the CGI interface executing
 PHP scripts, /usr/bin/php-cgi
 
-#%package ioncube
-#Summary: ionCube extension for PHP
-#Group: Development/Languages
-#Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
+%package ioncube
+Summary: ionCube extension for PHP
+Group: Development/Languages
+Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 
-#%description ioncube
-#ionCube Loader extensions for PHP. The ionCube
-#Loader is loaded as a PHP engine extension. This extension
-#transparently detects and loads encoded files.
+%description ioncube
+ionCube Loader extensions for PHP. The ionCube
+Loader is loaded as a PHP engine extension. This extension
+transparently detects and loads encoded files.
 %endif
 
 %if %{with_fpm}
@@ -706,10 +706,10 @@ possibility to act as a socket server as well as a client.
 %prep
 %setup -q -n php-%{version}
 
-#%if %{with_cgi}
-## ionCube Loader
-#%setup -q -n php-%{version} -T -D -a 16
-#%endif
+%if %{with_cgi}
+# ionCube Loader
+%setup -q -n php-%{version} -T -D -a 16
+%endif
 
 %patch1 -p1
 
@@ -1156,7 +1156,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{php_sysconfdir}/php-cgi-fcgi.d
 
 %if %{with_cgi}
 # install ioncube
-#install -D -m 755 ioncube/ioncube_loader_lin_7.4.so $RPM_BUILD_ROOT%{php_libdir}/modules/ioncube_loader_lin_7.4.so
+install -D -m 755 ioncube/ioncube_loader_lin_7.4.so $RPM_BUILD_ROOT%{php_libdir}/modules/ioncube_loader_lin_7.4.so
 
 # install config
 sed "s,@LIBDIR@,%{_libdir},g" \
@@ -1421,8 +1421,8 @@ exit 0
 %config(noreplace) %{php_sysconfdir}/php-cgi-fcgi.ini
 %{_mandir}/man1/%{bin_cgi}.1*
 
-#%files ioncube
-#%attr(755,root,root) %{php_libdir}/modules/ioncube_loader_lin_7.4.so
+%files ioncube
+%attr(755,root,root) %{php_libdir}/modules/ioncube_loader_lin_7.4.so
 %endif
 
 %if %{with_fpm}
