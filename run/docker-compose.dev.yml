@@ -6,7 +6,7 @@ services:
       args:
         centos: $OS7
     image: "aursu/php74build:${OS7TAG}-dev"
-  centos8php74dev:
+  stream8php74dev:
     build:
       context: dev
       args:
@@ -19,7 +19,7 @@ services:
         centos: $OS7
         image: dev2base
     image: "aursu/php74build:${OS7TAG}-dev2"
-  centos8php74dev2:
+  stream8php74dev2:
     build:
       context: dev
       args:

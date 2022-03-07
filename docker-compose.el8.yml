@@ -1,6 +1,6 @@
 version: "3.5"
 services:
-  centos8php74:
+  stream8php74:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm8:/home/centos/rpmbuild/RPMS

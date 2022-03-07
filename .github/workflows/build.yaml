@@ -8,9 +8,9 @@ env:
   DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
   BINTRAY_REPO: php74custom
   OS7: 7.9.2009
-  OS8: 8.4.2105
+  OS8: stream8
   OS7TAG: 7.9.2009
-  OS8TAG: 8.4.2105
+  OS8TAG: stream8
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -22,9 +22,9 @@ jobs:
             build: centos7php74
             uploader: centos7bintray
           - compose-file: docker-compose.el8.yml
-            base: centos8php74base
-            build: centos8php74
-            uploader: centos8bintray
+            base: stream8php74base
+            build: stream8php74
+            uploader: stream8bintray
     env:
       BUILD_COMPOSE_FILE: ${{ matrix.compose-file }}
       BASE: ${{ matrix.base }}

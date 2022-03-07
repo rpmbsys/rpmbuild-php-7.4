@@ -1,13 +1,13 @@
-version: "3.5"
+version: "3"
 services:
-  centos8php74run:
+  stream8php74run:
     build:
       context: .
       dockerfile: Dockerfile.el8
       args:
         centos: $OS8
     image: "aursu/php74build:${OS8TAG}-runtime"
-  centos8php74devbase:
+  stream8php74devbase:
     build:
       context: .
       dockerfile: Dockerfile.el8
@@ -15,7 +15,7 @@ services:
         image: nodedev
         centos: $OS8
     image: "aursu/php74build:${OS8TAG}-devbase"
-  centos8php74dev2base:
+  stream8php74dev2base:
     build:
       context: .
       dockerfile: Dockerfile.el8

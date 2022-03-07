@@ -7,7 +7,7 @@ services:
       args:
         centos: $OS7
     image: "aursu/php74build:${OS7}-base"
-  centos8php74base:
+  stream8php74base:
     build:
       context: .
       dockerfile: Dockerfile.8-base

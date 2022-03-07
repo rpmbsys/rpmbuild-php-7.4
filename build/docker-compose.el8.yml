@@ -1,6 +1,6 @@
-version: "3.5"
+version: "3"
 services:
-  centos8php74build:
+  stream8php74build:
     build:
       context: .
       args:

@@ -1,4 +1,4 @@
-ARG centos=8.4.2105
+ARG centos=stream8
 ARG image=web
 FROM aursu/centos:${centos}-${image}
 

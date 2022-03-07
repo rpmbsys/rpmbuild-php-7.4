@@ -13,12 +13,12 @@ env:
     - ARTIFACTORY_URL=https://rpmb.jfrog.io
     - BINTRAY_REPO=php74custom
     - OS7=7.9.2009
-    - OS8=8.4.2105
+    - OS8=stream8
     - OS7TAG=7.9.2009
-    - OS8TAG=8.4.2105
+    - OS8TAG=stream8
   jobs:
     - BUILD_COMPOSE_FILE=docker-compose.yml       BASE=centos7php74base BUILD=centos7php74    UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.el8.yml   BASE=centos8php74base BUILD=centos8php74    UPLOADER=centos8bintray
+    - BUILD_COMPOSE_FILE=docker-compose.el8.yml   BASE=stream8php74base BUILD=stream8php74    UPLOADER=stream8bintray
 
 install:
   - docker-compose -f docker-compose.base.yml build --no-cache --pull ${BASE}

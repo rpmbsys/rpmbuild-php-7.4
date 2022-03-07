@@ -12,22 +12,22 @@ workflows:
           build_service: centos7php74
           bintray_uploader: centos7bintray
       - docker-rpmbuild/rpmbuild:
-          name: centos8php74
-          base_service: centos8php74base
+          name: stream8php74
+          base_service: stream8php74base
           build_file: docker-compose.el8.yml
-          build_service: centos8php74
-          bintray_uploader: centos8bintray
+          build_service: stream8php74
+          bintray_uploader: stream8bintray
       - docker-rpmbuild/image:
           name: centos7php74build
           build_service: centos7php74build
           requires:
             - centos7php74
       - docker-rpmbuild/image:
-          name: centos8php74build
+          name: stream8php74build
           compose_file: build/docker-compose.el8.yml
-          build_service: centos8php74build
+          build_service: stream8php74build
           requires:
-            - centos8php74
+            - stream8php74
       - docker-rpmbuild/image:
           name: centos7php74run
           compose_file: run/docker-compose.yml
@@ -41,17 +41,17 @@ workflows:
           requires:
             - centos7php74
       - docker-rpmbuild/image:
-          name: centos8php74run
+          name: stream8php74run
           compose_file: run/docker-compose.el8.yml
-          build_service: centos8php74run
+          build_service: stream8php74run
           requires:
-            - centos8php74
+            - stream8php74
       - docker-rpmbuild/image:
-          name: centos8php74devbase
+          name: stream8php74devbase
           compose_file: run/docker-compose.el8.yml
-          build_service: centos8php74devbase
+          build_service: stream8php74devbase
           requires:
-            - centos8php74
+            - stream8php74
       - docker-rpmbuild/image:
           name: centos7php74dev
           compose_file: run/docker-compose.dev.yml
@@ -59,8 +59,8 @@ workflows:
           requires:
             - centos7php74devbase
       - docker-rpmbuild/image:
-          name: centos8php74dev
+          name: stream8php74dev
           compose_file: run/docker-compose.dev.yml
-          build_service: centos8php74dev
+          build_service: stream8php74dev
           requires:
-            - centos8php74devbase
+            - stream8php74devbase
