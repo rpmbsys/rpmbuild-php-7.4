@@ -31,6 +31,7 @@ RUN dnf -y install \
         pcre2-devel \
         perl \
         postgresql-devel \
+        procps-ng \
         sendmail \
         sqlite-devel \
         systemd-devel \
