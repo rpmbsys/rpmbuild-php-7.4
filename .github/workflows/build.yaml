@@ -21,15 +21,18 @@ jobs:
             base: centos7php74base
             build: centos7php74
             uploader: centos7bintray
+            repo_path: ""
           - compose-file: docker-compose.el8.yml
             base: stream8php74base
             build: stream8php74
             uploader: stream8bintray
+            repo_path: centos/8-stream
     env:
       BUILD_COMPOSE_FILE: ${{ matrix.compose-file }}
       BASE: ${{ matrix.base }}
       BUILD: ${{ matrix.build }}
       UPLOADER: ${{ matrix.uploader }}
+      REPO_PATH: ${{ matrix.repo_path }}
     steps:
       - uses: actions/checkout@v2
         with:

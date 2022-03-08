@@ -2,7 +2,6 @@ version: "3.5"
 services:
   centos7php74:
     volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
@@ -10,7 +9,5 @@ services:
         centos: $OS7
 
 volumes:
-  rpms:
-    name: rpms
   rpm7:
     name: rpm7

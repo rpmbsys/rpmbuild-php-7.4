@@ -2,8 +2,7 @@ version: "3.5"
 services:
   stream8php74:
     volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm8:/home/centos/rpmbuild/RPMS
+      - rpm8stream:/home/centos/rpmbuild/RPMS
     build:
       context: .
       dockerfile: Dockerfile.el8
@@ -11,7 +10,5 @@ services:
         centos: $OS8
 
 volumes:
-  rpms:
-    name: rpms
-  rpm8:
-    name: rpm8
+  rpm8stream:
+    name: rpm8stream
