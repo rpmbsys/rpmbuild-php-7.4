@@ -3,6 +3,7 @@ services:
   stream8php74build:
     build:
       context: .
+      dockerfile: Dockerfile.el8
       args:
         centos: $OS8
     image: aursu/php74build:${OS8TAG}-build

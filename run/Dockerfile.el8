@@ -2,7 +2,7 @@ ARG centos=stream8
 ARG image=web
 FROM aursu/centos:${centos}-${image}
 
-COPY system/etc/yum.repos.d/bintray-custom.repo /etc/yum.repos.d/bintray-custom.repo
+COPY system/etc/yum.repos.d/bintray-custom-stream.repo /etc/yum.repos.d/bintray-custom.repo
 
 RUN dnf -y install libzip \
     && dnf -y module disable php \
