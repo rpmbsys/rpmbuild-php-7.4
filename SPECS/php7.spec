@@ -142,7 +142,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.4.28
+Version: 7.4.30
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -197,7 +197,7 @@ Patch5: php-7.2.0-includedir.patch
 Patch8: php-7.2.0-libdb.patch
 
 # Functional changes
-Patch42: php-7.3.3-systzdata-v18.patch
+Patch42: php-7.3.3-systzdata-v19.patch
 # See http://bugs.php.net/53436
 Patch43: php-7.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -762,8 +762,6 @@ mkdir build-fpm
 # ----- Manage known as failed test -------
 # affected by systzdata patch
 rm ext/date/tests/timezone_location_get.phpt
-rm ext/date/tests/timezone_version_get.phpt
-rm ext/date/tests/timezone_version_get_basic1.phpt
 # fails sometime
 rm -f ext/sockets/tests/mcast_ipv?_recv.phpt
 # cause stack exhausion
@@ -1508,6 +1506,9 @@ exit 0
 %endif
 
 %changelog
+* Tue Jun  7 2022 Remi Collet <remi@remirepo.net> - 7.4.30-1
+- Update to 7.4.30 - http://www.php.net/releases/7_4_30.php
+
 * Tue Feb 15 2022 Remi Collet <remi@remirepo.net> - 7.4.28-1
 - Update to 7.4.28 - http://www.php.net/releases/7_4_28.php
 
