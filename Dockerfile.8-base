@@ -13,7 +13,6 @@ RUN dnf -y install \
         libedit-devel \
         libdb-devel \
         libffi-devel \
-        libicu-devel \
         libjpeg-turbo-devel \
         libpng-devel \
         libsodium-devel \
@@ -39,4 +38,8 @@ RUN dnf -y install \
         unixODBC-devel \
         uw-imap-devel \
         zlib-devel \
+    && dnf clean all && rm -rf /var/cache/dnf
+
+RUN dnf -y --disablerepo=* --enablerepo=bintray-custom install \
+        libicu-devel \
     && dnf clean all && rm -rf /var/cache/dnf

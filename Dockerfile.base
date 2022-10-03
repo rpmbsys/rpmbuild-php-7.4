@@ -13,7 +13,6 @@ RUN yum -y install \
         libedit-devel \
         libdb-devel \
         libffi-devel \
-        libicu-devel \
         libjpeg-turbo-devel \
         libpng-devel \
         libsodium-devel \
@@ -37,6 +36,7 @@ RUN yum -y install \
     && yum clean all && rm -rf /var/cache/yum
 
 RUN yum -y --disablerepo=* --enablerepo=bintray-custom install \
+        libicu-devel \
         "libzip-devel >= 1.5.1" \
         pcre2-devel \
         oniguruma-devel \
