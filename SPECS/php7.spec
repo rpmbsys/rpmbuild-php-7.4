@@ -142,7 +142,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.4.30
+Version: 7.4.32
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -242,9 +242,9 @@ BuildRequires: make
 BuildRequires: nginx-filesystem
 %endif
 BuildRequires: openssl-devel >= 1.0.1
-BuildRequires: pkgconfig(icu-i18n) >= 50.1
-BuildRequires: pkgconfig(icu-io)   >= 50.1
-BuildRequires: pkgconfig(icu-uc)   >= 50.1
+BuildRequires: pkgconfig(icu-i18n) >= 71
+BuildRequires: pkgconfig(icu-io) >= 71
+BuildRequires: pkgconfig(icu-uc) >= 71
 BuildRequires: pkgconfig(libcurl) >= 7.15.5
 BuildRequires: pkgconfig(libpcre2-8) >= 10.30
 BuildRequires: pkgconfig(libxml-2.0)
@@ -462,7 +462,6 @@ BuildRequires: libacl-devel
 BuildRequires: nginx-filesystem
 BuildRequires: pkgconfig(libsystemd) >= 209
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
-Requires(pre): /usr/sbin/useradd
 # for /etc/nginx ownership
 Requires(pre): nginx-filesystem
 Requires: nginx-filesystem
@@ -1506,6 +1505,10 @@ exit 0
 %endif
 
 %changelog
+* Wed Sep 28 2022 Remi Collet <remi@remirepo.net> - 7.4.32-1
+- Update to 7.4.32 - http://www.php.net/releases/7_4_32.php
+- use ICU 71.1
+
 * Tue Jun  7 2022 Remi Collet <remi@remirepo.net> - 7.4.30-1
 - Update to 7.4.30 - http://www.php.net/releases/7_4_30.php
 
