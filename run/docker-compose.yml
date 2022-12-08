@@ -10,7 +10,7 @@ services:
     build:
       context: .
       args:
-        image: nodedev
+        image: node14dev
         centos: $OS7
     image: "aursu/php74build:${OS7TAG}-devbase"
   centos7php74dev2base:
