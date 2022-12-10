@@ -137,7 +137,7 @@
 
 %global with_zip    1
 
-%global rpmrel 1
+%global rpmrel 2
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -205,6 +205,10 @@ Patch45: php-7.4.0-ldap_r.patch
 # drop "Configure command" from phpinfo output
 # and add build system and provider (from 8.0)
 Patch47: php-7.4.8-phpinfo.patch
+# fix snmp build without DES (from 8.0)
+Patch48: php-7.4.26-snmp.patch
+# compatibility with OpenSSL 3.0, from 8.1
+Patch50: php-7.4.26-openssl3.patch
 Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
@@ -213,7 +217,7 @@ Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
-Patch300: php-5.6.3-datetests.patch
+Patch300: php-7.0.10-datetests.patch
 
 # relocation (400+)
 Patch405: php7-php-7.2.0-includedir.patch
@@ -228,7 +232,6 @@ BuildRequires: freetype-devel
 BuildRequires: gcc-c++
 BuildRequires: gdbm-devel
 BuildRequires: httpd-devel >= 2.4
-BuildRequires: krb5-devel
 BuildRequires: libacl-devel
 BuildRequires: libc-client-devel
 BuildRequires: libjpeg-devel
@@ -249,6 +252,8 @@ BuildRequires: pkgconfig(icu-uc) >= 50.1
 BuildRequires: pkgconfig(libcurl) >= 7.15.5
 BuildRequires: pkgconfig(libpcre2-8) >= 10.30
 BuildRequires: pkgconfig(libxml-2.0)
+BuildRequires: pkgconfig(krb5)
+BuildRequires: pkgconfig(krb5-gssapi)
 BuildRequires: pkgconfig(oniguruma) >= 6.8
 BuildRequires: pkgconfig(sqlite3) >= 3.7.4
 BuildRequires: pkgconfig(zlib) >= 1.2.0.4
@@ -729,7 +734,12 @@ possibility to act as a socket server as well as a client.
 %patch43 -p1
 %patch45 -p1
 %patch47 -p1
+%patch48 -p1 -b .snmp
 %patch49 -p1
+%if 0%{?fedora} >= 36 || 0%{?rhel} >= 9
+%patch50 -p1 -b .openssl3
+rm ext/openssl/tests/p12_with_extra_certs.p12
+%endif
 
 # upstream patches
 
@@ -1506,6 +1516,9 @@ exit 0
 %endif
 
 %changelog
+* Sat Dec 10 2022 Alexander Ursu <alexander.ursu@gmail.com> - 7.4.33-2
+- add patch for OpenSSL 3.0, backported from 8.1
+
 * Tue Nov  1 2022 Remi Collet <remi@remirepo.net> - 7.4.33-1
 - Update to 7.4.33 - http://www.php.net/releases/7_4_33.php
 
