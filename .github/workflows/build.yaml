@@ -14,10 +14,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    on:
-      push:
-        tags:
-          - 7.4.*
     strategy:
       matrix:
         include:
