@@ -14,7 +14,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: ! startsWith(github.ref_name, "skip-rpm-")
+    if: ${{ ! startsWith(github.ref_name, 'skip-rpm-') }}
     strategy:
       matrix:
         include:
