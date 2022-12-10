@@ -8,6 +8,7 @@ RUN dnf -y install \
         freetype-devel \
         gdbm-devel \
         httpd-devel \
+        krb5-devel \
         libacl-devel \
         libcurl-devel \
         libedit-devel \

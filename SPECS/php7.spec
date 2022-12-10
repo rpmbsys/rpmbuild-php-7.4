@@ -228,6 +228,7 @@ BuildRequires: freetype-devel
 BuildRequires: gcc-c++
 BuildRequires: gdbm-devel
 BuildRequires: httpd-devel >= 2.4
+BuildRequires: krb5-devel
 BuildRequires: libacl-devel
 BuildRequires: libc-client-devel
 BuildRequires: libjpeg-devel
