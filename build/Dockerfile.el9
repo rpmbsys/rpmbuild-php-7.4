@@ -1,0 +1,15 @@
+ARG centos=stream9-20221206.0
+FROM aursu/rpmbuild:${centos}-build
+
+USER root
+
+COPY system/etc/yum.repos.d/bintray-custom-stream.repo /etc/yum.repos.d/bintray-custom.repo
+
+RUN dnf -y --enablerepo=bintray-custom --enablerepo=bintray-phpcustom install \
+        libc-client \
+        php-cli \
+        php-common \
+        php-devel \
+        php-process \
+        php-xml \
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*

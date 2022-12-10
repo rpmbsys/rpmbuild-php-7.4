@@ -1,0 +1,9 @@
+version: "3"
+services:
+  stream9php74build:
+    build:
+      context: .
+      dockerfile: Dockerfile.el9
+      args:
+        centos: $OS9
+    image: "aursu/php74build:${OS9TAG}-build"
