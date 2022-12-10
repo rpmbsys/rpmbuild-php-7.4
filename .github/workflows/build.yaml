@@ -46,6 +46,7 @@ jobs:
       - run: docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm -e BINTRAY_USER=$BINTRAY_USER -e BINTRAY_API_KEY=$BINTRAY_API_KEY -e BINTRAY_REPO=$BINTRAY_REPO -e ARTIFACTORY_URL=$ARTIFACTORY_URL -e REPO_PATH=$REPO_PATH $UPLOADER
   build:
     needs: test
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -56,6 +57,7 @@ jobs:
       - run: docker-compose -f build/docker-compose.yml push
   runtime:
     needs: test
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
