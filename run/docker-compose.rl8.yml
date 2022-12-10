@@ -1,0 +1,25 @@
+version: "3"
+services:
+  rocky8php74run:
+    build:
+      context: .
+      dockerfile: Dockerfile.rl8
+      args:
+        rocky: $RL8
+    image: "aursu/php74build:${RL8TAG}-runtime"
+  rocky8php74devbase:
+    build:
+      context: .
+      dockerfile: Dockerfile.rl8
+      args:
+        image: node16dev
+        rocky: $RL8
+    image: "aursu/php74build:${RL8TAG}-devbase"
+  rocky8php74dev2base:
+    build:
+      context: .
+      dockerfile: Dockerfile.rl8
+      args:
+        image: node18dev
+        rocky: $RL8
+    image: "aursu/php74build:${RL8TAG}-dev2base"

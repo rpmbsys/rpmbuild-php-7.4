@@ -242,9 +242,9 @@ BuildRequires: make
 BuildRequires: nginx-filesystem
 %endif
 BuildRequires: openssl-devel >= 1.0.1
-BuildRequires: pkgconfig(icu-i18n) >= 71
-BuildRequires: pkgconfig(icu-io) >= 71
-BuildRequires: pkgconfig(icu-uc) >= 71
+BuildRequires: pkgconfig(icu-i18n) >= 50.1
+BuildRequires: pkgconfig(icu-io) >= 50.1
+BuildRequires: pkgconfig(icu-uc) >= 50.1
 BuildRequires: pkgconfig(libcurl) >= 7.15.5
 BuildRequires: pkgconfig(libpcre2-8) >= 10.30
 BuildRequires: pkgconfig(libxml-2.0)
@@ -1510,7 +1510,6 @@ exit 0
 
 * Wed Sep 28 2022 Remi Collet <remi@remirepo.net> - 7.4.32-1
 - Update to 7.4.32 - http://www.php.net/releases/7_4_32.php
-- use ICU 71.1
 
 * Tue Jun  7 2022 Remi Collet <remi@remirepo.net> - 7.4.30-1
 - Update to 7.4.30 - http://www.php.net/releases/7_4_30.php

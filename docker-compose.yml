@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3"
 services:
   centos7php74:
     volumes:
@@ -6,8 +6,26 @@ services:
     build:
       context: .
       args:
-        centos: $OS7
+        os: $OS7
+  rocky8php74:
+    volumes:
+      - rpm8rocky:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        os: $RL8
+  stream9php74:
+    volumes:
+      - rpm9stream:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        os: $OS9
 
 volumes:
   rpm7:
     name: rpm7
+  rpm8rocky:
+    name: rpm8rocky
+  rpm9stream:
+    name: rpm9stream

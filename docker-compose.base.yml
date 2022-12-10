@@ -1,16 +1,23 @@
-version: "3.5"
+version: "3"
 services:
   centos7php74base:
     build:
       context: .
-      dockerfile: Dockerfile.base
+      dockerfile: Dockerfile.7-base
       args:
         centos: $OS7
     image: "aursu/php74build:${OS7}-base"
-  stream8php74base:
+  rocky8php74base:
     build:
       context: .
-      dockerfile: Dockerfile.8-base
+      dockerfile: Dockerfile.base
       args:
-        centos: $OS8
-    image: "aursu/php74build:${OS8}-base"
+        centos: $RL8
+    image: "aursu/php74build:${RL8TAG}-base"
+  stream9php74base:
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+      args:
+        os: $OS9
+    image: "aursu/php74build:${OS9TAG}-base"

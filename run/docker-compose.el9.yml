@@ -1,0 +1,25 @@
+version: "3"
+services:
+  stream9php74run:
+    build:
+      context: .
+      dockerfile: Dockerfile.el9
+      args:
+        centos: $OS9
+    image: "aursu/php74build:${OS9TAG}-runtime"
+  stream9php74devbase:
+    build:
+      context: .
+      dockerfile: Dockerfile.el9
+      args:
+        image: node16dev
+        centos: $OS9
+    image: "aursu/php74build:${OS9TAG}-devbase"
+  stream9php74dev2base:
+    build:
+      context: .
+      dockerfile: Dockerfile.el9
+      args:
+        image: node18dev
+        centos: $OS9
+    image: "aursu/php74build:${OS9TAG}-dev2base"
