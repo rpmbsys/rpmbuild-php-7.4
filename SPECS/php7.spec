@@ -117,11 +117,7 @@
 
 # Use the arch-specific mysql_config binary to avoid mismatch with the
 # arch detection heuristic used by bindir/mysql_config.
-%if 0%{?fedora}
-%global mysql_config %{_bindir}/mysql_config
-%else
 %global mysql_config %{_libdir}/mysql/mysql_config
-%endif
 
 %global mysql_sock %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
@@ -848,6 +844,11 @@ cat %{SOURCE53} > 20-ffi.ini
 %endif # if %{with_ffi}
 
 %build
+%if 0%{?rhel} >= 9
+# Disable LTO
+%define _lto_cflags %{nil}
+%endif
+
 # Set build date from https://reproducible-builds.org/specs/source-date-epoch/
 export SOURCE_DATE_EPOCH=$(date +%s -r NEWS)
 export PHP_UNAME=$(uname)
@@ -1518,6 +1519,7 @@ exit 0
 %changelog
 * Sat Dec 10 2022 Alexander Ursu <alexander.ursu@gmail.com> - 7.4.33-2
 - add patch for OpenSSL 3.0, backported from 8.1
+- Disable LTO for CentOS 9 Stream
 
 * Tue Nov  1 2022 Remi Collet <remi@remirepo.net> - 7.4.33-1
 - Update to 7.4.33 - http://www.php.net/releases/7_4_33.php
