@@ -6,17 +6,3 @@ services:
       args:
         centos: $OS7
     image: aursu/php74build:${OS7TAG}-build
-  rocky8php74build:
-    build:
-      context: .
-      dockerfile: Dockerfile.rl8
-      args:
-        centos: $RL8
-    image: aursu/php74build:${RL8TAG}-build
-  stream9php74build:
-    build:
-      context: .
-      dockerfile: Dockerfile.el9
-      args:
-        centos: $OS9
-    image: aursu/php74build:${OS9TAG}-build
