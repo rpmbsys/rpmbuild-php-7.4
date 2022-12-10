@@ -5,8 +5,24 @@ USER root
 
 COPY system/etc/yum.repos.d/bintray-custom-stream.repo /etc/yum.repos.d/bintray-custom.repo
 
-RUN dnf -y --enablerepo=bintray-custom --enablerepo=bintray-phpcustom install \
+# in CentOS 9 Stream there is PHP 8.0 distribution inside AppStream repo
+RUN dnf -y --enablerepo=bintray-custom install \
+        httpd-filesystem \
+        krb5-devel \
         libc-client \
+        libjpeg-turbo \
+        libwebp \
+        libxml2-devel \
+        libxslt \
+        libzip \
+        oniguruma \
+        openssl-devel \
+        pcre2-devel \
+        unixODBC \
+        zlib-devel \
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
+
+RUN dnf -y --repo=baseos --repo=bintray-phpcustom install \
         php-cli \
         php-common \
         php-devel \
