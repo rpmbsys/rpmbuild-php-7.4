@@ -14,6 +14,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: ! startsWith(github.ref_name, "skip-rpm-")
     strategy:
       matrix:
         include:
@@ -46,25 +47,13 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - compose-file: build/docker-compose.yml
-            build: centos7php74build
-          - compose-file: build/docker-compose.rl8.yml
-            build: rocky8php74build
-          - compose-file: build/docker-compose.el9.yml
-            build: stream9php74build
-    env:
-      BUILD_COMPOSE_FILE: ${{ matrix.compose-file }}
-      BUILD: ${{ matrix.build }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: docker-compose -f $BUILD_COMPOSE_FILE build --no-cache --pull $BUILD
+      - run: docker-compose -f build/docker-compose.yml build --no-cache --pull
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker-compose -f $BUILD_COMPOSE_FILE push
+      - run: docker-compose -f build/docker-compose.yml push
   runtime:
     needs: test
     runs-on: ubuntu-latest

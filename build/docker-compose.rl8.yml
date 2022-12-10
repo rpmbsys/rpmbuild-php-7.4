@@ -1,9 +1,0 @@
-version: "3"
-services:
-  rocky8php74build:
-    build:
-      context: .
-      dockerfile: Dockerfile.rl8
-      args:
-        centos: $RL8
-    image: "aursu/php74build:${RL8TAG}-build"
