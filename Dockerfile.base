@@ -38,8 +38,8 @@ RUN dnf -y install \
         systemtap-sdt-devel \
         unixODBC-devel \
         zlib-devel \
-    && dnf clean all && rm -rf /var/cache/dnf
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
 
 RUN dnf -y --enablerepo=bintray-custom install \
         uw-imap-devel \
-    && dnf clean all && rm -rf /var/cache/dnf
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
