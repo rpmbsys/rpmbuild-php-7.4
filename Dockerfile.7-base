@@ -26,18 +26,18 @@ RUN yum -y install \
         openldap-devel \
         openssl-devel \
         postgresql-devel \
-        sendmail \
+        postfix \
         sqlite-devel \
         systemd-devel \
         systemtap-sdt-devel \
         unixODBC-devel \
         uw-imap-devel \
         zlib-devel \
-    && yum clean all && rm -rf /var/cache/yum
+    && yum clean all && rm -rf /var/cache/yum /var/lib/rpm/__db*
 
 RUN yum -y --enablerepo=bintray-custom install \
         libicu-devel \
         "libzip-devel >= 1.5.1" \
         pcre2-devel \
         oniguruma-devel \
-    && yum clean all && rm -rf /var/cache/yum
+    && yum clean all && rm -rf /var/cache/yum /var/lib/rpm/__db*

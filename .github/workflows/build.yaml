@@ -8,12 +8,15 @@ env:
   DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
   BINTRAY_REPO: php74custom
   OS7: 7.9.2009
-  OS8: stream8
+  OS8: 8.7.20221112
   OS7TAG: 7.9.2009
-  OS8TAG: stream8
+  OS8TAG: 8.7.20221112
+  OS9: stream9-20221206.0
+  OS9TAG: stream9-20221206.0
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: ${{ ! startsWith(github.ref_name, 'skip-rpm-') }}
     strategy:
       matrix:
         include:
@@ -45,28 +48,18 @@ jobs:
       - run: docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm -e BINTRAY_USER=$BINTRAY_USER -e BINTRAY_API_KEY=$BINTRAY_API_KEY -e BINTRAY_REPO=$BINTRAY_REPO -e ARTIFACTORY_URL=$ARTIFACTORY_URL -e REPO_PATH=$REPO_PATH $UPLOADER
   build:
     needs: test
+    if: ${{ always() }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - compose-file: build/docker-compose.yml
-            build: centos7php74build
-          - compose-file: build/docker-compose.rl8.yml
-            build: rocky8php74build
-          - compose-file: build/docker-compose.el9.yml
-            build: stream9php74build
-    env:
-      BUILD_COMPOSE_FILE: ${{ matrix.compose-file }}
-      BUILD: ${{ matrix.build }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: docker-compose -f $BUILD_COMPOSE_FILE build --no-cache --pull $BUILD
+      - run: docker-compose -f build/docker-compose.yml build --no-cache --pull
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker-compose -f $BUILD_COMPOSE_FILE push
+      - run: docker-compose -f build/docker-compose.yml push
   runtime:
     needs: test
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
