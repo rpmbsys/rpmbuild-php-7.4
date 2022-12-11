@@ -11,7 +11,7 @@ services:
       context: .
       dockerfile: Dockerfile.rl8
       args:
-        centos: $RL8
+        rocky: $RL8
     image: "aursu/php74build:${RL8TAG}-build"
   stream9php74build:
     build:
