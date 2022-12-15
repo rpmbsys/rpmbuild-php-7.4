@@ -5,6 +5,10 @@ USER root
 
 COPY system/etc/yum.repos.d/bintray-custom-stream.repo /etc/yum.repos.d/bintray-custom.repo
 
+RUN dnf -y reinstall \
+        tzdata \
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
+
 # in CentOS 9 Stream there is PHP 8.0 distribution inside AppStream repo
 RUN dnf -y --enablerepo=bintray-custom install \
         httpd-filesystem \
