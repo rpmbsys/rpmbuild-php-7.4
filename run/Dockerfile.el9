@@ -4,9 +4,29 @@ FROM aursu/centos:${centos}-${image}
 
 COPY system/etc/yum.repos.d/bintray-custom-stream.repo /etc/yum.repos.d/bintray-custom.repo
 
-RUN microdnf -y install libzip \
-    && microdnf -y module disable php \
-    && microdnf -y --enablerepo=bintray-custom --enablerepo=bintray-phpcustom install \
+# dependencies from AppStream repo
+# AppStream repo contains PHP 8.0 which is preferable for dnf then PHP 7.4
+RUN microdnf -y install \
+        ImageMagick-libs \
+        fastlz \
+        httpd-filesystem \
+        libjpeg-turbo \
+        liblzf \
+        libsodium \
+        libwebp \
+        libxslt \
+        libzip \
+        nginx-filesystem \
+        oniguruma \
+        unixODBC \
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
+
+# disable AppStream repo with PHP 8.0
+# disable Epel repo which contains php-sodium >=  8.0
+RUN microdnf -y --disablerepo=appstream \
+    --disablerepo=epel \
+    --enablerepo=bintray-custom \
+    --enablerepo=bintray-phpcustom install \
         php-bcmath \
         php-cli \
         php-fpm \
