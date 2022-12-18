@@ -73,6 +73,7 @@ jobs:
       - run: docker-compose -f ${{ matrix.compose-file }} push
   dev:
     needs: runtime
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
