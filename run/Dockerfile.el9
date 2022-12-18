@@ -19,7 +19,7 @@ RUN microdnf -y install \
         nginx-filesystem \
         oniguruma \
         unixODBC \
-    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
+    && microdnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
 
 # disable AppStream repo with PHP 8.0
 # disable Epel repo which contains php-sodium >=  8.0
@@ -38,7 +38,7 @@ RUN microdnf -y --disablerepo=appstream \
         php-pecl-redis5 \
         php-sodium \
         php-xml \
-    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
+    && microdnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
 
 # php-fpm configuration
 COPY system/etc/php-fpm.conf /etc/php-fpm.conf
