@@ -4,6 +4,10 @@ FROM aursu/centos:${centos}-${image}
 
 COPY system/etc/yum.repos.d/bintray-custom-stream.repo /etc/yum.repos.d/bintray-custom.repo
 
+RUN microdnf -y reinstall \
+        tzdata \
+    && microdnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
+
 # dependencies from AppStream repo
 # AppStream repo contains PHP 8.0 which is preferable for dnf then PHP 7.4
 RUN microdnf -y install --enablerepo=crb \
