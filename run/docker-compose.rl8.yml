@@ -12,7 +12,7 @@ services:
       context: .
       dockerfile: Dockerfile.rl8
       args:
-        image: node16dev
+        image: node18dev
         rocky: $RL8
     image: "aursu/php74build:${RL8TAG}-devbase"
   rocky8php74dev2base:
@@ -20,6 +20,6 @@ services:
       context: .
       dockerfile: Dockerfile.rl8
       args:
-        image: node18dev
+        image: node20dev
         rocky: $RL8
     image: "aursu/php74build:${RL8TAG}-dev2base"

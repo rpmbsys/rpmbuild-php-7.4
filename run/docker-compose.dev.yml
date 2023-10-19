@@ -18,13 +18,6 @@ services:
       args:
         os: $OS9
     image: "aursu/php74build:${OS9TAG}-dev"
-  centos7php74dev2:
-    build:
-      context: dev
-      args:
-        os: $OS7
-        image: dev2base
-    image: "aursu/php74build:${OS7TAG}-dev2"
   rocky8php74dev2:
     build:
       context: dev

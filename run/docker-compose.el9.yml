@@ -12,7 +12,7 @@ services:
       context: .
       dockerfile: Dockerfile.el9
       args:
-        image: node16dev
+        image: node18dev
         centos: $OS9
     image: "aursu/php74build:${OS9TAG}-devbase"
   stream9php74dev2base:
@@ -20,6 +20,6 @@ services:
       context: .
       dockerfile: Dockerfile.el9
       args:
-        image: node18dev
+        image: node20dev
         centos: $OS9
     image: "aursu/php74build:${OS9TAG}-dev2base"
